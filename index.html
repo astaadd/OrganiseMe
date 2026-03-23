@@ -1,0 +1,4185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Organise.me</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #22263a;
+  --surface3: #2c3050;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #eef0f8;
+  --text-muted: #7b84a8;
+  --text-dim: #4a5070;
+
+  --coral: #ff6b6b;
+  --gold: #f5c842;
+  --mint: #2dd4a0;
+  --sky: #5ba8ff;
+  --lavender: #9b87f5;
+  --peach: #ffb347;
+
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+
+  --nav-h: 76px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { background: var(--bg); }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  max-width: 430px;
+  margin: 0 auto;
+  padding-bottom: calc(var(--nav-h) + 16px);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ─── SCROLLBAR ──── */
+::-webkit-scrollbar { width: 0; }
+
+/* ─── HEADER ──── */
+.header {
+  padding: 52px 20px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(15,17,23,0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.header-date {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.btn-reset {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,107,107,0.1);
+  border: 1px solid rgba(255,107,107,0.25);
+  color: var(--coral);
+  border-radius: var(--radius-sm);
+  padding: 6px 11px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: all 0.2s;
+}
+.btn-reset:active { background: rgba(255,107,107,0.2); transform: scale(0.97); }
+
+.header-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.mini-stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 8px;
+  min-width: 0;
+}
+.mini-stat-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mini-stat-value {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── CONTENT ──── */
+.content { padding: 0 16px; }
+.section { display: none; animation: fadeIn 0.2s ease; }
+.section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ─── SECTION HEADER ──── */
+.section-header {
+  padding: 20px 0 12px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+.section-count {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* ─── CARDS ──── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  transition: border-color 0.2s;
+}
+.card:active { border-color: var(--border2); }
+.card.compact { padding: 13px 15px; }
+.card.glass {
+  background: rgba(26,29,39,0.7);
+  backdrop-filter: blur(12px);
+}
+
+/* ─── PANEL TITLE ──── */
+.panel-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+/* ─── SECTION LABEL ──── */
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 18px 0 10px;
+}
+
+/* ─── INPUTS ──── */
+input, select, textarea {
+  width: 100%;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  -webkit-appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--lavender);
+  background: rgba(34,38,58,0.9);
+}
+input::placeholder, textarea::placeholder { color: var(--text-dim); font-weight: 400; }
+select { cursor: pointer; }
+select option { background: var(--surface2); color: var(--text); }
+textarea.note-input { resize: none; height: 84px; }
+
+.search-wrap { position: relative; margin-bottom: 14px; }
+.search-wrap::before {
+  content: '⌕';
+  position: absolute;
+  left: 13px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: var(--text-dim);
+  pointer-events: none;
+}
+.search-input {
+  padding-left: 36px;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+}
+.search-input:focus { border-color: var(--lavender); }
+
+/* ─── INPUT ROW ──── */
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+/* ─── BUTTONS ──── */
+.btn-add {
+  width: 44px; height: 44px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--lavender);
+  color: white;
+  font-size: 22px;
+  font-weight: 300;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.btn-add:active { transform: scale(0.93); opacity: 0.85; }
+.btn-primary {
+  background: var(--lavender);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.2px;
+}
+.btn-primary:active { transform: scale(0.97); opacity: 0.88; }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text-muted);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-secondary:active { background: var(--surface3); }
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(93,168,255,0.12);
+  border: 1px solid rgba(93,168,255,0.2);
+  color: var(--sky);
+  border-radius: 100px;
+  padding: 6px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-pill:active { background: rgba(93,168,255,0.2); }
+
+/* ─── TASK ITEMS ──── */
+.task-item { display: flex; align-items: flex-start; gap: 12px; }
+.task-check {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border2);
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  margin-top: 1px;
+}
+.task-check:active { transform: scale(0.88); }
+.task-check.done { background: var(--mint); border-color: var(--mint); }
+.task-check.done::after { content: '✓'; color: #0f1117; font-size: 11px; font-weight: 800; }
+.task-main { flex: 1; min-width: 0; }
+.task-text { font-size: 15px; line-height: 1.4; font-weight: 400; color: var(--text); }
+.task-text.done { text-decoration: line-through; color: var(--text-dim); }
+.task-sub { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+.task-actions { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+.icon-btn {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 15px;
+  transition: all 0.15s;
+  border: none;
+  background: none;
+}
+.icon-btn:hover { background: var(--surface2); color: var(--text-muted); }
+.icon-btn:active { transform: scale(0.9); }
+.icon-btn.del:hover { color: var(--coral); background: rgba(255,107,107,0.1); }
+
+/* ─── BADGES ──── */
+.badge {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 100px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.badge-high { background: rgba(255,107,107,0.15); color: var(--coral); }
+.badge-med  { background: rgba(245,200,66,0.15);  color: var(--gold); }
+.badge-low  { background: rgba(45,212,160,0.15);  color: var(--mint); }
+
+/* ─── NOTES ──── */
+.note-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.note-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.note-title { font-weight: 600; font-size: 15px; color: var(--text); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.note-preview { font-size: 13px; color: var(--text-muted); white-space: pre-wrap; word-break: break-word; line-height: 1.5; }
+.note-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+.note-date { font-size: 11px; color: var(--text-dim); }
+
+/* ─── CALENDAR ──── */
+.cal-nav { display: flex; align-items: center; justify-content: space-between; padding: 4px 0 16px; }
+.cal-nav-btn {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border2);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.cal-nav-btn:active { background: var(--surface2); }
+.cal-month { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 300; color: var(--text); }
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; margin-bottom: 20px; }
+.cal-day-label {
+  text-align: center;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text-dim);
+  padding: 6px 0 10px;
+}
+.cal-day {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  color: var(--text-dim);
+  transition: all 0.15s;
+}
+.cal-day:active { transform: scale(0.88); }
+.cal-day.cur-month { color: var(--text-muted); }
+.cal-day.today { background: var(--lavender); color: white; font-weight: 700; box-shadow: 0 4px 12px rgba(155,135,245,0.35); }
+.cal-day.selected { background: var(--surface2); color: var(--text); outline: 2px solid var(--lavender); outline-offset: 0px; }
+.cal-day.has-event::after { content: ''; position: absolute; bottom: 4px; width: 4px; height: 4px; border-radius: 50%; background: var(--sky); }
+
+/* ─── EVENT ITEM ──── */
+.event-item { display: flex; align-items: center; gap: 12px; }
+.event-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sky); flex-shrink: 0; box-shadow: 0 0 6px rgba(91,168,255,0.5); }
+.event-info { flex: 1; min-width: 0; }
+.event-title { font-size: 14px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.event-time { font-size: 12px; color: var(--text-muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ─── EXPENSE ITEM ──── */
+.expense-item { display: flex; align-items: center; gap: 12px; }
+.expense-icon {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.expense-info { flex: 1; min-width: 0; }
+.expense-name { font-size: 14px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.expense-cat { font-size: 11px; color: var(--text-muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.expense-amount { font-size: 15px; font-weight: 700; color: var(--coral); }
+
+/* ─── EXPENSES HERO ──── */
+.exp-hero {
+  background: linear-gradient(160deg, #1a1d27 0%, #22263a 100%);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px 20px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.exp-hero::before {
+  content: '';
+  position: absolute;
+  top: -50px; right: -30px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,107,107,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.exp-hero-label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+.exp-hero-total {
+  font-family: 'Fraunces', serif;
+  font-size: 52px; font-weight: 300;
+  line-height: 1; letter-spacing: -1.5px;
+  color: var(--coral);
+  margin-bottom: 4px;
+}
+.exp-hero-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; }
+.exp-cat-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+.exp-cat-pill {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 13px;
+  text-align: center;
+  flex-shrink: 0;
+  min-width: 76px;
+}
+.exp-cat-pill .cat-amt { font-size: 14px; font-weight: 700; color: var(--coral); }
+.exp-cat-pill .cat-name { font-size: 10px; color: var(--text-dim); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.8px; }
+
+/* ─── EXPECTED TOTALS ──── */
+.totals-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.total-pill {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  text-align: center;
+}
+.total-pill .t-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+.total-pill .t-value { font-size: 18px; font-weight: 700; color: var(--coral); }
+
+/* ─── CAR KPI GRID ──── */
+.car-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.car-kpi {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+}
+.car-kpi .label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+.car-kpi .value { font-size: 17px; font-weight: 700; color: var(--text); }
+
+/* ─── HELPER ROW ──── */
+.helper-row {
+  font-size: 12px; color: var(--text-dim);
+  line-height: 1.55; margin-top: 10px;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.02);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+/* ─── EMPTY STATES ──── */
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-dim); }
+.empty-icon { font-size: 44px; margin-bottom: 12px; opacity: 0.6; display: block; }
+.empty-state p { font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+.empty-state strong { color: var(--text); display: block; font-size: 16px; margin-bottom: 4px; font-weight: 600; }
+
+/* ─── BOTTOM NAV ──── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100%; max-width: 430px;
+  background: rgba(15,17,23,0.92);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  padding: 10px 4px 20px;
+  z-index: 100;
+}
+.nav-item {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 4px;
+  cursor: pointer;
+  padding: 6px 2px;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+  position: relative;
+}
+.nav-icon {
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 9px;
+  font-size: 16px;
+  transition: all 0.2s;
+  background: none;
+}
+.nav-label {
+  font-size: 9px; font-weight: 500;
+  color: var(--text-dim);
+  letter-spacing: 0.2px;
+  transition: color 0.2s;
+}
+.nav-item.active .nav-icon { background: rgba(155,135,245,0.18); transform: translateY(-2px); }
+.nav-item.active .nav-label { color: var(--lavender); }
+
+/* ─── MODALS ──── */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  align-items: flex-end;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 24px 20px 40px;
+  width: 100%; max-height: 92vh; overflow-y: auto;
+  border-top: 1px solid var(--border2);
+  animation: slideUp 0.28s cubic-bezier(0.34,1.1,0.64,1);
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-handle { width: 36px; height: 4px; background: var(--surface3); border-radius: 2px; margin: 0 auto 20px; }
+.modal h3 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 300; color: var(--text); margin-bottom: 18px; }
+.modal input, .modal select, .modal textarea { margin-bottom: 10px; }
+.modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+
+/* ─── RESET MODAL ──── */
+.reset-modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 300;
+  align-items: center; justify-content: center;
+  backdrop-filter: blur(8px);
+}
+.reset-modal-overlay.open { display: flex; }
+.reset-modal {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  padding: 28px 24px;
+  width: calc(100% - 40px); max-width: 340px;
+  text-align: center;
+  border: 1px solid var(--border2);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+  animation: popIn 0.22s cubic-bezier(0.34,1.3,0.64,1);
+}
+@keyframes popIn { from { transform: scale(0.88); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.reset-modal-icon { font-size: 42px; margin-bottom: 14px; display: block; }
+.reset-modal h3 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 300; color: var(--text); margin-bottom: 8px; }
+.reset-modal p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 22px; }
+.reset-modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.btn-danger {
+  background: var(--coral); border: none;
+  border-radius: var(--radius-sm); padding: 14px;
+  color: white; font-family: 'Outfit', sans-serif;
+  font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+}
+.btn-danger:active { opacity: 0.85; transform: scale(0.97); }
+
+/* ─── BACKUP SECTION ──── */
+.backup-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 10px;
+}
+.backup-card-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+}
+.backup-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.btn-backup-export {
+  background: linear-gradient(135deg, rgba(45,212,160,0.15) 0%, rgba(45,212,160,0.08) 100%);
+  border: 1px solid rgba(45,212,160,0.3);
+  color: var(--mint);
+  border-radius: var(--radius-sm);
+  padding: 13px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  letter-spacing: 0.2px;
+}
+.btn-backup-export:active { opacity: 0.8; transform: scale(0.97); }
+.btn-backup-import {
+  background: linear-gradient(135deg, rgba(91,168,255,0.15) 0%, rgba(91,168,255,0.08) 100%);
+  border: 1px solid rgba(91,168,255,0.3);
+  color: var(--sky);
+  border-radius: var(--radius-sm);
+  padding: 13px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  letter-spacing: 0.2px;
+}
+.btn-backup-import:active { opacity: 0.8; transform: scale(0.97); }
+.backup-meta {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+.backup-meta span { color: var(--text-muted); }
+.backup-status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+  display: none;
+  line-height: 1.4;
+}
+.backup-status.success {
+  background: rgba(45,212,160,0.1);
+  border: 1px solid rgba(45,212,160,0.2);
+  color: var(--mint);
+  display: block;
+}
+.backup-status.error {
+  background: rgba(255,107,107,0.1);
+  border: 1px solid rgba(255,107,107,0.2);
+  color: var(--coral);
+  display: block;
+}
+
+/* ─── BACKUP REMINDER BANNER ──── */
+.backup-reminder {
+  display: none;
+  background: linear-gradient(135deg, rgba(245,200,66,0.1) 0%, rgba(245,200,66,0.05) 100%);
+  border: 1px solid rgba(245,200,66,0.25);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin: 12px 0 0;
+  position: relative;
+}
+.backup-reminder.visible { display: flex; align-items: flex-start; gap: 12px; }
+.backup-reminder-icon { font-size: 20px; flex-shrink: 0; line-height: 1; padding-top: 2px; }
+.backup-reminder-body { flex: 1; min-width: 0; }
+.backup-reminder-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 2px;
+}
+.backup-reminder-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+.backup-reminder-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-reminder-backup {
+  background: rgba(245,200,66,0.15);
+  border: 1px solid rgba(245,200,66,0.3);
+  color: var(--gold);
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.btn-reminder-backup:active { opacity: 0.8; transform: scale(0.96); }
+.btn-reminder-later {
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--text-dim);
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.btn-reminder-later:active { opacity: 0.8; }
+
+/* ─── IMPORT CONFIRM MODAL ──── */
+.import-modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.78);
+  z-index: 400;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+.import-modal-overlay.open { display: flex; }
+.import-modal {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  padding: 28px 24px;
+  width: calc(100% - 40px);
+  max-width: 340px;
+  text-align: center;
+  border: 1px solid var(--border2);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.55);
+  animation: popIn 0.22s cubic-bezier(0.34,1.3,0.64,1);
+}
+.import-modal-icon { font-size: 40px; margin-bottom: 14px; display: block; }
+.import-modal h3 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 300; color: var(--text); margin-bottom: 8px; }
+.import-modal p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 6px; }
+.import-modal-summary {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: left;
+  margin: 12px 0 18px;
+  line-height: 1.7;
+}
+.import-modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ─── DELETE & EDIT ICONS ──── */
+.task-del, .task-edit {
+  cursor: pointer; color: var(--text-dim);
+  font-size: 16px; padding: 6px;
+  border-radius: 8px; flex-shrink: 0;
+  transition: all 0.15s;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.task-del:hover { color: var(--coral); background: rgba(255,107,107,0.1); }
+.task-edit:hover { color: var(--lavender); background: rgba(155,135,245,0.1); }
+
+/* ─── AMOUNT DISPLAY ──── */
+.amount-negative { color: var(--coral); font-weight: 700; font-size: 15px; }
+
+/* ─── FUEL SUB-INFO ──── */
+.fuel-sub {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 2px;
+  letter-spacing: 0.3px;
+}
+
+/* ─── DASHBOARD ──── */
+.dash-greeting { padding: 22px 0 6px; }
+.dash-greeting-title {
+  font-family: 'Fraunces', serif;
+  font-size: 26px; font-weight: 300;
+  color: var(--text);
+  letter-spacing: -0.4px;
+  margin-bottom: 3px;
+}
+.dash-greeting-sub { font-size: 13px; color: var(--text-muted); }
+
+.dash-section-label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 20px 0 10px;
+}
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 0;
+}
+.dash-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 0;
+}
+
+.dash-stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 14px 14px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.dash-stat:active { border-color: var(--border2); }
+.dash-stat-icon { font-size: 22px; margin-bottom: 10px; display: block; line-height: 1; }
+.dash-stat-value {
+  font-family: 'Fraunces', serif;
+  font-size: 28px; font-weight: 300;
+  line-height: 1; color: var(--text);
+  letter-spacing: -0.8px; margin-bottom: 5px;
+}
+.dash-stat-value.coral    { color: var(--coral); }
+.dash-stat-value.mint     { color: var(--mint); }
+.dash-stat-value.sky      { color: var(--sky); }
+.dash-stat-value.gold     { color: var(--gold); }
+.dash-stat-value.lavender { color: var(--lavender); }
+.dash-stat-label { font-size: 11px; font-weight: 500; color: var(--text-muted); line-height: 1.3; }
+
+.dash-stat-wide {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 0;
+}
+.dash-stat-wide-icon { font-size: 26px; flex-shrink: 0; }
+.dash-stat-wide-body { flex: 1; min-width: 0; }
+.dash-stat-wide-value {
+  font-family: 'Fraunces', serif;
+  font-size: 26px; font-weight: 300;
+  color: var(--coral); letter-spacing: -0.6px;
+  line-height: 1; margin-bottom: 3px;
+}
+.dash-stat-wide-label { font-size: 12px; font-weight: 500; color: var(--text-muted); }
+
+/* ─── CAR TAB REDESIGN ──── */
+
+/* Hero banner */
+.car-hero {
+  background: linear-gradient(145deg, #12151f 0%, #1c2035 50%, #0f1117 100%);
+  border: 1px solid rgba(91,168,255,0.15);
+  border-radius: var(--radius-lg);
+  padding: 22px 20px 20px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.car-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -40px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(91,168,255,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.car-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: -20px;
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(45,212,160,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.car-hero-eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--sky);
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+.car-hero-metric-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+.car-hero-value {
+  font-family: 'Fraunces', serif;
+  font-size: 56px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -2px;
+  color: var(--sky);
+  margin-bottom: 2px;
+}
+/* carMonthFuel uses Outfit per spec */
+#carMonthFuel {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--coral);
+}
+#carMonthFuel .hero-decimal {
+  font-size: 0.52em;
+  font-weight: 600;
+  vertical-align: baseline;
+  opacity: 0.85;
+}
+#carMonthFuel .hero-sign {
+  font-size: 0.75em;
+  font-weight: 700;
+  margin-right: 2px;
+}
+.car-hero-unit {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+.car-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.car-hero-stat {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  padding: 10px 8px;
+  text-align: center;
+}
+.car-hero-stat-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.car-hero-stat-val.negative { color: var(--coral); }
+.car-hero-stat-lbl {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Last fuel entry card */
+.car-last-fuel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.car-last-fuel-icon {
+  width: 48px; height: 48px;
+  border-radius: var(--radius-sm);
+  background: rgba(91,168,255,0.12);
+  border: 1px solid rgba(91,168,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.car-last-fuel-body { flex: 1; min-width: 0; }
+.car-last-fuel-amount {
+  font-family: 'Fraunces', serif;
+  font-size: 26px;
+  font-weight: 300;
+  color: var(--coral);
+  letter-spacing: -0.6px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.car-last-fuel-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.car-last-fuel-meta span {
+  color: var(--text-dim);
+}
+
+/* Section label with line */
+.car-section-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 10px;
+}
+.car-section-label-text {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.car-section-label-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Add fuel form card */
+.car-form-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 10px;
+}
+.car-form-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.car-form-title-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: rgba(91,168,255,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.car-input-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 5px;
+}
+.car-input-group {
+  margin-bottom: 12px;
+}
+.car-input-group input {
+  margin-bottom: 0;
+}
+.car-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.btn-fuel-add {
+  width: 100%;
+  background: linear-gradient(135deg, #3a7bd5 0%, #5ba8ff 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(91,168,255,0.25);
+}
+.btn-fuel-add:active { transform: scale(0.97); opacity: 0.88; }
+.car-form-hint {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: rgba(91,168,255,0.04);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(91,168,255,0.08);
+  line-height: 1.5;
+}
+
+/* Fuel history entries */
+.fuel-entry-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: border-color 0.2s;
+}
+.fuel-entry-card:active { border-color: var(--border2); }
+.fuel-entry-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  flex-shrink: 0;
+}
+.fuel-entry-icon {
+  font-size: 20px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.fuel-entry-date-short {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: 0.3px;
+  text-align: center;
+}
+.fuel-entry-body { flex: 1; min-width: 0; }
+.fuel-entry-amount {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--coral);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.fuel-entry-details {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.fuel-entry-dist {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(45,212,160,0.1);
+  border: 1px solid rgba(45,212,160,0.15);
+  border-radius: 100px;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--mint);
+  margin-top: 4px;
+}
+.fuel-entry-note {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 3px;
+  font-style: italic;
+}
+
+/* Maintenance reminder cards */
+.maint-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: border-color 0.2s;
+}
+.maint-card.urgent { border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.03); }
+.maint-card.soon   { border-color: rgba(245,200,66,0.25); background: rgba(245,200,66,0.02); }
+.maint-icon-wrap {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.maint-icon-wrap.purple { background: rgba(155,135,245,0.12); border: 1px solid rgba(155,135,245,0.18); }
+.maint-icon-wrap.sky    { background: rgba(91,168,255,0.12);  border: 1px solid rgba(91,168,255,0.18); }
+.maint-icon-wrap.gold   { background: rgba(245,200,66,0.12);  border: 1px solid rgba(245,200,66,0.18); }
+.maint-icon-wrap.mint   { background: rgba(45,212,160,0.12);  border: 1px solid rgba(45,212,160,0.18); }
+.maint-icon-wrap.coral  { background: rgba(255,107,107,0.12); border: 1px solid rgba(255,107,107,0.18); }
+.maint-body { flex: 1; min-width: 0; }
+.maint-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+.maint-next {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.maint-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 100px;
+  flex-shrink: 0;
+  letter-spacing: 0.3px;
+}
+.maint-badge.ok     { background: rgba(45,212,160,0.12);  color: var(--mint); }
+.maint-badge.warn   { background: rgba(245,200,66,0.15);  color: var(--gold); }
+.maint-badge.alert  { background: rgba(255,107,107,0.15); color: var(--coral); }
+
+/* Maintenance setup collapsible */
+.maint-setup-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: border-color 0.2s;
+  user-select: none;
+}
+.maint-setup-toggle:active { border-color: var(--border2); }
+.maint-setup-toggle-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.maint-setup-toggle-icon {
+  width: 32px; height: 32px;
+  border-radius: 9px;
+  background: rgba(155,135,245,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
+.maint-setup-toggle-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+.maint-setup-toggle-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+.maint-setup-chevron {
+  font-size: 16px;
+  color: var(--text-dim);
+  transition: transform 0.2s;
+}
+.maint-setup-chevron.open { transform: rotate(180deg); }
+.maint-setup-body {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: 16px;
+  margin-top: -8px;
+  margin-bottom: 8px;
+}
+.maint-setup-body.open { display: block; }
+
+/* ─── CAR HERO SECONDARY METRIC ──── */
+.car-hero-secondary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+}
+.car-hero-secondary-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.car-hero-secondary-value {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--sky);
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+.car-hero-secondary-sub {
+  font-size: 11px;
+  color: var(--text-dim);
+  flex: 1;
+}
+
+/* ─── MAINTENANCE TABS ──── */
+.maint-tabs-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.maint-tab-bar {
+  display: flex;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.maint-tab-bar::-webkit-scrollbar { display: none; }
+.maint-tab-btn {
+  flex-shrink: 0;
+  padding: 11px 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.maint-tab-btn:active { background: rgba(255,255,255,0.03); }
+.maint-tab-btn.active {
+  color: var(--sky);
+  border-bottom-color: var(--sky);
+  background: rgba(91,168,255,0.05);
+}
+.maint-tab-btn .tab-del {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-left: 2px;
+  padding: 0 3px;
+  border-radius: 4px;
+  line-height: 1;
+  display: none;
+}
+.maint-tab-btn.custom-tab .tab-del { display: inline; }
+.maint-tab-btn.custom-tab .tab-del:hover { color: var(--coral); background: rgba(255,107,107,0.1); }
+
+.maint-tab-panels { padding: 16px; }
+.maint-tab-panel { display: none; }
+.maint-tab-panel.active { display: block; }
+
+/* ─── RECURRENCE UI ──── */
+.recur-row { margin-bottom: 12px; }
+.recur-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.recur-options { display: flex; gap: 6px; flex-wrap: wrap; }
+.recur-btn {
+  padding: 7px 13px;
+  border-radius: 100px;
+  border: 1.5px solid var(--border2);
+  background: none;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.recur-btn.active {
+  background: rgba(91,168,255,0.12);
+  border-color: var(--sky);
+  color: var(--sky);
+}
+.recur-sub-row { margin-top: 8px; display: none; }
+.recur-sub-row.visible { display: block; }
+.recur-sub-row select { margin-bottom: 0; }
+
+/* ─── ADD CUSTOM TYPE ──── */
+.maint-add-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  background: rgba(255,255,255,0.01);
+}
+.maint-add-custom .car-input-group { margin-bottom: 0; flex: 1; }
+.maint-add-custom input { margin-bottom: 0; }
+
+/* ─── MAINT SAVE BTN ──── */
+.btn-maint-save {
+  width: 100%;
+  background: linear-gradient(135deg, #1c2a4a 0%, #2a3f6f 100%);
+  color: var(--sky);
+  border: 1px solid rgba(91,168,255,0.25);
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.2px;
+  margin-top: 4px;
+}
+.btn-maint-save:active { transform: scale(0.97); opacity: 0.88; }
+
+/* ─── RESPONSIVE ──── */
+@media (max-width: 390px) {
+  .header-stats { grid-template-columns: repeat(2, 1fr); }
+  .car-kpi-grid, .two-col, .totals-row, .dash-grid { grid-template-columns: 1fr; }
+  .dash-grid-3 { grid-template-columns: 1fr 1fr; }
+  .bottom-nav { grid-template-columns: repeat(8, 1fr); }
+  .car-hero-stats { grid-template-columns: repeat(2, 1fr); }
+  .car-two-col { grid-template-columns: 1fr; }
+  .car-hero-secondary { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="header-top">
+    <div class="header-date" id="headerDate"></div>
+    <button class="btn-reset" onclick="openResetModal()">
+      <span>⚠</span> Reset
+    </button>
+  </div>
+  <div class="header-stats">
+    <div class="mini-stat">
+      <div class="mini-stat-label">Tasks</div>
+      <div class="mini-stat-value" id="statTasks">0</div>
+    </div>
+    <div class="mini-stat">
+      <div class="mini-stat-label">Notes</div>
+      <div class="mini-stat-value" id="statNotes">0</div>
+    </div>
+    <div class="mini-stat">
+      <div class="mini-stat-label">Month</div>
+      <div class="mini-stat-value" id="statMonthSpent">€0</div>
+    </div>
+    <div class="mini-stat">
+      <div class="mini-stat-label">Car</div>
+      <div class="mini-stat-value" id="statCarSpent">€0</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CONTENT ── -->
+<div class="content">
+
+<!-- ── BACKUP REMINDER BANNER ── -->
+<div class="backup-reminder" id="backupReminder">
+  <div class="backup-reminder-icon">💾</div>
+  <div class="backup-reminder-body">
+    <div class="backup-reminder-title">Back up your data</div>
+    <div class="backup-reminder-sub" id="backupReminderSub">You haven't backed up yet. Export a copy to keep it safe.</div>
+    <div class="backup-reminder-actions">
+      <button class="btn-reminder-backup" onclick="triggerExportFromReminder()">Back up now</button>
+      <button class="btn-reminder-later" onclick="dismissBackupReminder()">Later</button>
+    </div>
+  </div>
+</div>
+
+  <!-- DASHBOARD -->
+  <section class="section active" id="section-dashboard">
+    <div class="dash-greeting">
+      <div class="dash-greeting-title" id="dashGreeting">Good morning</div>
+      <div class="dash-greeting-sub" id="dashSubtitle">Here's your overview</div>
+    </div>
+
+    <div class="dash-section-label">Productivity</div>
+    <div class="dash-grid">
+      <div class="dash-stat">
+        <span class="dash-stat-icon">✅</span>
+        <div class="dash-stat-value lavender" id="dashOpenTasks">0</div>
+        <div class="dash-stat-label">Open Tasks</div>
+      </div>
+      <div class="dash-stat">
+        <span class="dash-stat-icon">☑️</span>
+        <div class="dash-stat-value mint" id="dashCompletedTasks">0</div>
+        <div class="dash-stat-label">Completed Tasks</div>
+      </div>
+    </div>
+    <div class="dash-grid">
+      <div class="dash-stat">
+        <span class="dash-stat-icon">📝</span>
+        <div class="dash-stat-value sky" id="dashNotes">0</div>
+        <div class="dash-stat-label">Total Notes</div>
+      </div>
+      <div class="dash-stat">
+        <span class="dash-stat-icon">📅</span>
+        <div class="dash-stat-value gold" id="dashEvents">0</div>
+        <div class="dash-stat-label">Total Events</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATISTICS -->
+  <section class="section" id="section-statistics">
+    <div class="section-header">
+      <span class="section-title">Statistics</span>
+    </div>
+
+    <div class="dash-section-label">Last Month Summary</div>
+    <div class="dash-grid">
+      <div class="dash-stat">
+        <span class="dash-stat-icon">💸</span>
+        <div class="dash-stat-value coral" id="dashLastMonthExpenses">-€0.00</div>
+        <div class="dash-stat-label">Total expenses</div>
+      </div>
+      <div class="dash-stat">
+        <span class="dash-stat-icon">✅</span>
+        <div class="dash-stat-value mint" id="dashLastMonthTasksCompleted">0</div>
+        <div class="dash-stat-label">Tasks completed</div>
+      </div>
+    </div>
+    <div class="dash-grid" style="margin-bottom:20px">
+      <div class="dash-stat">
+        <span class="dash-stat-icon">📝</span>
+        <div class="dash-stat-value sky" id="dashLastMonthNotes">0</div>
+        <div class="dash-stat-label">Notes created</div>
+      </div>
+      <div class="dash-stat">
+        <span class="dash-stat-icon">📅</span>
+        <div class="dash-stat-value lavender" id="dashLastMonthEvents">0</div>
+        <div class="dash-stat-label">Calendar events</div>
+      </div>
+    </div>
+
+    <div class="dash-section-label">Productivity</div>
+    <div class="dash-grid">
+      <div class="dash-stat">
+        <span class="dash-stat-icon">✅</span>
+        <div class="dash-stat-value lavender" id="statsOpenTasks">0</div>
+        <div class="dash-stat-label">Open Tasks</div>
+      </div>
+      <div class="dash-stat">
+        <span class="dash-stat-icon">☑️</span>
+        <div class="dash-stat-value mint" id="statsCompletedTasks">0</div>
+        <div class="dash-stat-label">Completed Tasks</div>
+      </div>
+    </div>
+    <div class="dash-grid" style="margin-bottom:20px">
+      <div class="dash-stat">
+        <span class="dash-stat-icon">📝</span>
+        <div class="dash-stat-value sky" id="statsNotes">0</div>
+        <div class="dash-stat-label">Total Notes</div>
+      </div>
+      <div class="dash-stat">
+        <span class="dash-stat-icon">📅</span>
+        <div class="dash-stat-value gold" id="statsEvents">0</div>
+        <div class="dash-stat-label">Total Events</div>
+      </div>
+    </div>
+
+    <div class="dash-section-label">Calendar</div>
+    <div class="dash-grid" style="margin-bottom:20px">
+      <div class="dash-stat">
+        <span class="dash-stat-icon">📅</span>
+        <div class="dash-stat-value sky" id="statsUpcomingEvents">0</div>
+        <div class="dash-stat-label">Events this month</div>
+      </div>
+      <div class="dash-stat">
+        <span class="dash-stat-icon">📌</span>
+        <div class="dash-stat-value gold" id="statsTodayEvents">0</div>
+        <div class="dash-stat-label">Events today</div>
+      </div>
+    </div>
+
+    <div class="dash-section-label">Expenses</div>
+    <div class="dash-stat-wide" style="margin-bottom:10px">
+      <div class="dash-stat-wide-icon">💸</div>
+      <div class="dash-stat-wide-body">
+        <div class="dash-stat-wide-value" id="statsMonthExpenses">-€0.00</div>
+        <div class="dash-stat-wide-label">Paid this month (incl. fuel)</div>
+      </div>
+    </div>
+    <div class="dash-grid" style="margin-bottom:20px">
+      <div class="dash-stat">
+        <span class="dash-stat-icon">🗓️</span>
+        <div class="dash-stat-value coral" id="statsWeekFuture">-€0.00</div>
+        <div class="dash-stat-label">Expected this week</div>
+      </div>
+      <div class="dash-stat">
+        <span class="dash-stat-icon">📆</span>
+        <div class="dash-stat-value coral" id="statsMonthFuture">-€0.00</div>
+        <div class="dash-stat-label">Expected this month</div>
+      </div>
+    </div>
+
+    <div class="dash-section-label">Car</div>
+    <div class="dash-grid" style="margin-bottom:10px">
+      <div class="dash-stat">
+        <span class="dash-stat-icon">⛽</span>
+        <div class="dash-stat-value coral" id="statsCarTotal">€0</div>
+        <div class="dash-stat-label">Total car cost</div>
+      </div>
+      <div class="dash-stat">
+        <span class="dash-stat-icon">🛣️</span>
+        <div class="dash-stat-value mint" id="statsCostPerKm">€0.000</div>
+        <div class="dash-stat-label">Cost per km</div>
+      </div>
+    </div>
+    <div class="dash-grid">
+      <div class="dash-stat">
+        <span class="dash-stat-icon">🔧</span>
+        <div class="dash-stat-value gold" id="statsMaintCount">5</div>
+        <div class="dash-stat-label">Maintenance items</div>
+      </div>
+      <div class="dash-stat">
+        <span class="dash-stat-icon">📏</span>
+        <div class="dash-stat-value sky" id="statsOdometer">0 km</div>
+        <div class="dash-stat-label">Current odometer</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BACKUP (within statistics section as sub-area) -->
+  <section class="section" id="section-backup">
+    <div class="section-header">
+      <span class="section-title">Data &amp; Backup</span>
+    </div>
+
+    <div class="backup-card">
+      <div class="backup-card-title">Export backup</div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;line-height:1.5">
+        Download all your data as a JSON file. Save it to Files, Google Drive, or iCloud for safe keeping.
+      </p>
+      <button class="btn-backup-export" onclick="exportBackup()">
+        <span>⬇</span> Export backup
+      </button>
+      <div class="backup-meta" id="exportMeta">Last backup: <span id="lastBackupLabel">Never</span></div>
+    </div>
+
+    <div class="backup-card">
+      <div class="backup-card-title">Restore from backup</div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;line-height:1.5">
+        Select a previously exported JSON file to restore your data. Your current data will be replaced.
+      </p>
+      <input type="file" id="importFileInput" accept=".json,application/json"
+             style="display:none" onchange="handleImportFile(this)">
+      <button class="btn-backup-import" onclick="document.getElementById('importFileInput').click()">
+        <span>⬆</span> Select backup file
+      </button>
+      <div class="backup-status" id="backupStatus"></div>
+    </div>
+
+    <div style="height:8px"></div>
+  </section>
+
+  <!-- TASKS -->
+  <section class="section" id="section-tasks">
+    <div class="section-header">
+      <span class="section-title">Tasks</span>
+    </div>
+    <div class="card">
+      <div class="input-row">
+        <input type="text" id="taskInput" placeholder="Add a new task…" onkeydown="if(event.key==='Enter') addTask()">
+        <select id="taskPriority" style="width:82px;flex-shrink:0">
+          <option value="high">🔴 High</option>
+          <option value="med" selected>🟡 Med</option>
+          <option value="low">🟢 Low</option>
+        </select>
+        <button class="btn-add" onclick="addTask()">+</button>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input class="search-input" id="taskSearch" placeholder="Search tasks…" oninput="renderTasks()">
+    </div>
+    <div class="section-label">My Tasks</div>
+    <div id="taskList"></div>
+  </section>
+
+  <!-- NOTES -->
+  <section class="section" id="section-notes">
+    <div class="section-header">
+      <span class="section-title">Notes</span>
+    </div>
+    <div class="card">
+      <input type="text" id="noteTitle" placeholder="Note title…" style="margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:1fr 44px;gap:8px;align-items:end">
+        <textarea class="note-input" id="noteBody" placeholder="Write something…"></textarea>
+        <button class="btn-add" onclick="addNote()">+</button>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input class="search-input" id="noteSearch" placeholder="Search notes…" oninput="renderNotes()">
+    </div>
+    <div class="section-label">My Notes</div>
+    <div id="noteList"></div>
+  </section>
+
+  <!-- CALENDAR -->
+  <section class="section" id="section-calendar">
+    <div class="section-header">
+      <span class="section-title">Calendar</span>
+    </div>
+    <div class="card">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+        <div class="cal-month" id="calMonthLabel"></div>
+        <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="section-label" id="calEventsLabel">Events</div>
+    <div id="eventList"></div>
+    <button class="btn-primary" onclick="openEventModal()" style="width:100%;margin-top:10px">+ Add Event</button>
+  </section>
+
+  <!-- EXPENSES -->
+  <section class="section" id="section-expenses">
+    <div class="section-header">
+      <span class="section-title">Expenses</span>
+    </div>
+
+    <!-- Expenses hero -->
+    <div class="exp-hero">
+      <div class="exp-hero-label">Total Spent</div>
+      <div class="exp-hero-total" id="expHeroTotal">-€0.00</div>
+      <div class="exp-hero-sub" id="expHeroSub">This month: -€0.00</div>
+      <div class="exp-cat-row" id="expBreakdown"></div>
+    </div>
+
+    <!-- Expected totals -->
+    <div class="totals-row">
+      <div class="total-pill">
+        <div class="t-label">Expected this week</div>
+        <div class="t-value" id="futureWeekTotal">-€0.00</div>
+      </div>
+      <div class="total-pill">
+        <div class="t-label">Expected this month</div>
+        <div class="t-value" id="futureMonthTotal">-€0.00</div>
+      </div>
+    </div>
+
+    <!-- Add expense -->
+    <div class="card">
+      <div class="panel-title">Add expense</div>
+      <div class="input-row">
+        <input type="text" id="expName" placeholder="Description…" onkeydown="if(event.key==='Enter') addExpense()">
+        <input type="number" id="expAmount" placeholder="0.00" style="width:80px;flex-shrink:0" onkeydown="if(event.key==='Enter') addExpense()">
+        <button class="btn-add" onclick="addExpense()">+</button>
+      </div>
+      <div class="two-col">
+        <select id="expCategory">
+          <option value="Food">🍔 Food</option>
+          <option value="Transport">🚗 Transport</option>
+          <option value="Shopping">🛍️ Shopping</option>
+          <option value="Social">🎉 Social</option>
+          <option value="Health">🏥 Health</option>
+          <option value="Fuel">⛽ Fuel</option>
+          <option value="Other">📦 Other</option>
+        </select>
+        <input type="date" id="expDate">
+      </div>
+      <!-- Recurrence -->
+      <div style="margin-top:4px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px">Recurrence</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+          <button class="recur-btn active" id="expRecurBtn_onetime" onclick="setExpRecur('onetime')">One time</button>
+          <button class="recur-btn" id="expRecurBtn_weekly"  onclick="setExpRecur('weekly')">Weekly</button>
+          <button class="recur-btn" id="expRecurBtn_everyxmonths" onclick="setExpRecur('everyxmonths')">Every X months</button>
+        </div>
+        <div id="expRecurSub_weekly" style="display:none">
+          <select id="expRecurWeekday" style="margin-bottom:0">
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5" selected>Friday</option>
+            <option value="6">Saturday</option>
+          </select>
+        </div>
+        <div id="expRecurSub_everyxmonths" style="display:none">
+          <select id="expRecurMonths" style="margin-bottom:0">
+            <option value="1">Every 1 month</option>
+            <option value="2">Every 2 months</option>
+            <option value="3">Every 3 months</option>
+            <option value="6">Every 6 months</option>
+            <option value="12">Every 12 months</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Future expenses -->
+    <div class="card" id="futureExpForm">
+      <div class="panel-title">Planned / Future expenses</div>
+      <div class="two-col">
+        <input type="text" id="futureExpName" placeholder="Upcoming expense…">
+        <input type="number" id="futureExpAmount" placeholder="€0.00">
+      </div>
+      <div class="two-col">
+        <select id="futureExpCategory">
+          <option value="Bills">🧾 Bills</option>
+          <option value="Transport">🚗 Transport</option>
+          <option value="Shopping">🛍️ Shopping</option>
+          <option value="Car">🚘 Car</option>
+          <option value="Fuel">⛽ Fuel</option>
+          <option value="Health">🏥 Health</option>
+          <option value="Other">📦 Other</option>
+        </select>
+        <input type="date" id="futureExpDate">
+      </div>
+      <div class="recur-row">
+        <div class="recur-label">Recurrence</div>
+        <div class="recur-options">
+          <button type="button" class="recur-btn active" data-recur="onetime" onclick="selectRecurrence('onetime')">One time</button>
+          <button type="button" class="recur-btn" data-recur="weekly" onclick="selectRecurrence('weekly')">Weekly</button>
+          <button type="button" class="recur-btn" data-recur="monthly" onclick="selectRecurrence('monthly')">Every X months</button>
+        </div>
+        <div class="recur-sub-row" id="recurWeeklySub">
+          <select id="recurWeekday" style="margin-bottom:0">
+            <option value="monday">Monday</option>
+            <option value="tuesday">Tuesday</option>
+            <option value="wednesday">Wednesday</option>
+            <option value="thursday">Thursday</option>
+            <option value="friday">Friday</option>
+            <option value="saturday">Saturday</option>
+            <option value="sunday">Sunday</option>
+          </select>
+        </div>
+        <div class="recur-sub-row" id="recurMonthlySub">
+          <input type="number" id="recurMonths" placeholder="Number of months" min="1" value="1" style="margin-bottom:0">
+        </div>
+      </div>
+      <button class="btn-primary" onclick="addFutureExpense()" style="width:100%;margin-top:4px">Add future expense</button>
+    </div>
+
+    <div class="search-wrap">
+      <input class="search-input" id="expenseSearch" placeholder="Search expenses…" oninput="renderExpenses()">
+    </div>
+    <div class="section-label">Recent Expenses</div>
+    <div id="expenseList"></div>
+    <div class="section-label" style="margin-top:20px">Future Expenses</div>
+    <div id="futureExpenseList"></div>
+  </section>
+
+  <!-- CAR -->
+  <section class="section" id="section-car">
+
+    <!-- ── 1. CAR OVERVIEW HERO ── -->
+    <div style="padding: 18px 0 4px;">
+      <div style="font-family:'Fraunces',serif;font-size:28px;font-weight:300;color:var(--text);letter-spacing:-0.5px;margin-bottom:2px;">Car</div>
+      <div style="font-size:12px;color:var(--text-muted);" id="carOdoSubtitle">Odometer: — km</div>
+    </div>
+
+    <!-- Initial Odometer Setup (shown when not set) -->
+    <div class="card" id="initialOdoSetup" style="display:none;margin-bottom:12px;border:1.5px solid var(--sky);background:rgba(91,168,255,0.03)">
+      <div class="car-form-title">
+        <div class="car-form-title-icon" style="background:rgba(91,168,255,0.15)">📏</div>
+        Initial Odometer Setup
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.5">
+        Set your starting point for car tracking. This will be used as the baseline for all calculations.
+      </div>
+      <div class="car-input-group">
+        <div class="car-input-label">Initial Odometer Reading (km)</div>
+        <input type="number" id="initialOdoReading" placeholder="e.g., 45000">
+      </div>
+      <div class="car-input-group">
+        <div class="car-input-label">Initial Date</div>
+        <input type="date" id="initialOdoDate">
+      </div>
+      <button class="btn-fuel-add" onclick="saveInitialOdometer()">
+        <span>✓</span> Save Initial Setup
+      </button>
+      <div style="font-size:10px;color:var(--text-dim);margin-top:10px;text-align:center">
+        You can edit this later if needed
+      </div>
+    </div>
+
+    <!-- Hero: This Month (primary metric) -->
+    <div class="car-hero">
+      <div class="car-hero-eyebrow">🚗 Car Analytics</div>
+      <div class="car-hero-metric-label">Car Expenses This Month</div>
+      <div class="car-hero-value" id="carMonthFuel">€0</div>
+      <div class="car-hero-unit">all car expenses this month</div>
+      <!-- Secondary metric row -->
+      <div class="car-hero-secondary">
+        <div class="car-hero-secondary-label">Cost per km</div>
+        <div class="car-hero-secondary-value" id="carCostPerKm">€0.000</div>
+        <div class="car-hero-secondary-sub">per kilometre driven</div>
+      </div>
+      <div class="car-hero-stats">
+        <div class="car-hero-stat">
+          <div class="car-hero-stat-val negative" id="carFuelTotal">€0</div>
+          <div class="car-hero-stat-lbl">Total Fuel</div>
+        </div>
+        <div class="car-hero-stat">
+          <div class="car-hero-stat-val" id="carDistanceTotal">0 km</div>
+          <div class="car-hero-stat-lbl">Distance</div>
+        </div>
+        <div class="car-hero-stat">
+          <div class="car-hero-stat-val" id="carFuelEntries">0</div>
+          <div class="car-hero-stat-lbl">Fill-ups (mo)</div>
+        </div>
+        <div class="car-hero-stat">
+          <div class="car-hero-stat-val negative" id="carAvgFill">€0</div>
+          <div class="car-hero-stat-lbl">Avg/Week</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 2. MAINTENANCE (TABBED) ── -->
+    <div class="car-section-label">
+      <span class="car-section-label-text">Maintenance</span>
+      <span class="car-section-label-line"></span>
+    </div>
+
+    <!-- Reminder cards (always visible) -->
+    <div id="maintenanceList"></div>
+
+    <!-- Tabbed maintenance manager -->
+    <div class="maint-tabs-wrap">
+      <!-- Tab scroll row -->
+      <div class="maint-tab-bar" id="maintTabBar"></div>
+      <!-- Tab panels rendered by JS -->
+      <div class="maint-tab-panels" id="maintTabPanels"></div>
+      <!-- Add custom type -->
+      <div style="padding:12px 16px;border-top:1px solid var(--border);background:rgba(255,255,255,0.01)">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px">Add Custom Type</div>
+        <div style="display:grid;grid-template-columns:1fr 44px;gap:8px;align-items:center;margin-bottom:0">
+          <input type="text" id="customMaintName" placeholder="Name (e.g. Tyres)…" style="margin-bottom:0"
+                 oninput="toggleCustomMaintFields()">
+          <button class="btn-add" onclick="addCustomMaintType()" title="Add custom maintenance type">+</button>
+        </div>
+        <div id="customMaintExtraFields" style="display:none;margin-top:8px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <input type="number" id="customMaintLastKm" placeholder="Last done km" style="margin-bottom:0">
+            <input type="number" id="customMaintIntervalKm" placeholder="Interval km (e.g. 10000)" style="margin-bottom:0">
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);cursor:pointer;padding:4px 0">
+            <input type="checkbox" id="customMaintShowInList" style="width:auto;margin:0;accent-color:var(--sky)">
+            Show in main maintenance list
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden KPI elements still needed by renderCar() for dashboard compatibility -->
+    <span id="maintCurrentOdo" style="display:none"></span>
+    <span id="maintOilDue" style="display:none"></span>
+    <span id="maintAirDue" style="display:none"></span>
+    <span id="maintInsuranceDue" style="display:none"></span>
+
+
+
+    <!-- ── 3. LAST FUEL ENTRY ── -->
+    <div class="car-section-label">
+      <span class="car-section-label-text">Last Fill-up</span>
+      <span class="car-section-label-line"></span>
+    </div>
+    <div id="carLastFuelEntry">
+      <div class="car-last-fuel">
+        <div class="car-last-fuel-icon">⛽</div>
+        <div class="car-last-fuel-body">
+          <div class="car-last-fuel-amount">—</div>
+          <div class="car-last-fuel-meta">No fuel entries yet</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 4. CAR EXPENSES HISTORY ── -->
+    <div class="car-section-label">
+      <span class="car-section-label-text">Car Expenses History</span>
+      <span class="car-section-label-line"></span>
+    </div>
+    <div id="carFuelHistory"></div>
+
+    <div style="height:8px"></div>
+  </section>
+
+</div><!-- /content -->
+
+<!-- ── BOTTOM NAV ── -->
+<nav class="bottom-nav">
+  <div class="nav-item active" data-tab="dashboard">
+    <div class="nav-icon">🏠</div>
+    <div class="nav-label">Dash</div>
+  </div>
+  <div class="nav-item" data-tab="statistics">
+    <div class="nav-icon">📊</div>
+    <div class="nav-label">Stats</div>
+  </div>
+  <div class="nav-item" data-tab="tasks">
+    <div class="nav-icon">✅</div>
+    <div class="nav-label">Tasks</div>
+  </div>
+  <div class="nav-item" data-tab="notes">
+    <div class="nav-icon">📝</div>
+    <div class="nav-label">Notes</div>
+  </div>
+  <div class="nav-item" data-tab="calendar">
+    <div class="nav-icon">📅</div>
+    <div class="nav-label">Calendar</div>
+  </div>
+  <div class="nav-item" data-tab="expenses">
+    <div class="nav-icon">💸</div>
+    <div class="nav-label">Expenses</div>
+  </div>
+  <div class="nav-item" data-tab="car">
+    <div class="nav-icon">🚗</div>
+    <div class="nav-label">Car</div>
+  </div>
+  <div class="nav-item" data-tab="backup">
+    <div class="nav-icon">💾</div>
+    <div class="nav-label">Backup</div>
+  </div>
+</nav>
+
+<!-- ── EVENT MODAL ── -->
+<div class="modal-overlay" id="eventModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 id="eventModalTitle">New Event</h3>
+    <input type="text" id="evtTitle" placeholder="Event title…">
+    <input type="date" id="evtDate">
+    <input type="time" id="evtTime">
+    <textarea id="evtNotes" placeholder="Notes (optional)…" style="min-height:84px"></textarea>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeEventModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveEvent()">Save event</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── RESET MODAL ── -->
+<div class="reset-modal-overlay" id="resetModal">
+  <div class="reset-modal">
+    <span class="reset-modal-icon">⚠️</span>
+    <h3>Reset all data?</h3>
+    <p>This will permanently delete all your tasks, notes, events, expenses, and car data. This cannot be undone.</p>
+    <div class="reset-modal-actions">
+      <button class="btn-secondary" onclick="closeResetModal()">Cancel</button>
+      <button class="btn-danger" onclick="confirmResetAll()">Reset all</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── IMPORT CONFIRM MODAL ── -->
+<div class="import-modal-overlay" id="importModal">
+  <div class="import-modal">
+    <span class="import-modal-icon">📦</span>
+    <h3>Restore backup?</h3>
+    <p>This will replace all current data with the backup contents.</p>
+    <div class="import-modal-summary" id="importModalSummary">Loading backup info…</div>
+    <p style="font-size:12px;color:var(--coral);font-weight:600;margin-bottom:18px">⚠ This cannot be undone.</p>
+    <div class="import-modal-actions">
+      <button class="btn-secondary" onclick="closeImportModal()">Cancel</button>
+      <button class="btn-primary" onclick="confirmImport()">Restore</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ────
+function safeParse(key, fallback) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+  catch(e) { return fallback; }
+}
+let tasks               = safeParse('org_tasks',                    []);
+let notes               = safeParse('org_notes',                    []);
+let events              = safeParse('org_events',                   []);
+let expenses            = safeParse('org_expenses',                 []);
+let futureExpenses      = safeParse('org_future_expenses',          []);
+let carFuel             = safeParse('org_car_fuel',                 []);
+let maintenanceSettings = safeParse('org_car_maintenance_settings', {});
+let initialOdoData      = safeParse('org_initial_odo',              null);
+let editingEventId      = null;
+
+const now    = new Date();
+const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const noteColors = ['#ff6b6b','#f5c842','#2dd4a0','#5ba8ff','#9b87f5'];
+
+// Category colours & emoji — includes Fuel
+const catColors = {
+  Food:'#ff6b6b', Transport:'#5ba8ff', Shopping:'#9b87f5',
+  Social:'#f5c842', Health:'#2dd4a0', Other:'#ffb347',
+  Bills:'#f59e0b', Car:'#3b82f6', Fuel:'#5ba8ff'
+};
+const catEmoji = {
+  Food:'🍔', Transport:'🚗', Shopping:'🛍️', Social:'🎉',
+  Health:'🏥', Other:'📦', Bills:'🧾', Car:'🚘', Fuel:'⛽'
+};
+
+// ── SAVE ────
+function save() {
+  localStorage.setItem('org_tasks',                    JSON.stringify(tasks));
+  localStorage.setItem('org_notes',                    JSON.stringify(notes));
+  localStorage.setItem('org_events',                   JSON.stringify(events));
+  localStorage.setItem('org_expenses',                 JSON.stringify(expenses));
+  localStorage.setItem('org_future_expenses',          JSON.stringify(futureExpenses));
+  localStorage.setItem('org_car_fuel',                 JSON.stringify(carFuel));
+  localStorage.setItem('org_car_maintenance_settings', JSON.stringify(maintenanceSettings));
+  updateHeaderStats();
+}
+
+// ── UTILS ────
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+function toInputDate(date) {
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+}
+
+// British date display: DD/MM/YYYY
+function britishDate(isoStr) {
+  if (!isoStr) return '';
+  // Already British format?
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(isoStr)) return isoStr;
+  const d = new Date(isoStr + 'T00:00:00');
+  if (isNaN(d.getTime())) return '';
+  const dd   = String(d.getDate()).padStart(2, '0');
+  const mm   = String(d.getMonth() + 1).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+}
+
+// British date from a Date object (for maintenance reminders)
+function britishDateObj(dateObj) {
+  const dd   = String(dateObj.getDate()).padStart(2, '0');
+  const mm   = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const yyyy = dateObj.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+}
+
+function formatMoney(v) { return `€${Number(v || 0).toFixed(2)}`; }
+
+function getFridayWeekRange(baseDate = new Date()) {
+  const d = new Date(baseDate);
+  d.setHours(0,0,0,0);
+  const diffToFriday = (d.getDay() - 5 + 7) % 7;
+  const start = new Date(d);
+  start.setDate(d.getDate() - diffToFriday);
+  start.setHours(0,0,0,0);
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
+  end.setHours(23,59,59,999);
+  return { start, end };
+}
+
+function inSameMonth(dateStr, baseDate = new Date()) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.getMonth() === baseDate.getMonth() && d.getFullYear() === baseDate.getFullYear();
+}
+
+function isWithinRange(dateStr, start, end) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d >= start && d <= end;
+}
+
+function addMonthsSafe(dateString, monthsToAdd) {
+  const d = new Date(dateString + 'T00:00:00');
+  const day = d.getDate();
+  const result = new Date(d);
+  result.setMonth(result.getMonth() + monthsToAdd);
+  if (result.getDate() < day) result.setDate(0);
+  return result;
+}
+
+function getCurrentOdometer() {
+  if (!carFuel.length) return 0;
+  return Math.max(...carFuel.map(e => Number(e.odo || 0)));
+}
+
+function getCarCostPerKm() {
+  const sorted = [...carFuel].sort((a,b) => a.odo - b.odo);
+  let totalDistance = 0;
+  for (let i = 1; i < sorted.length; i++) {
+    const diff = Number(sorted[i].odo) - Number(sorted[i-1].odo);
+    if (diff > 0) totalDistance += diff;
+  }
+  const fuelCost  = sorted.reduce((s,e) => s + Number(e.cost||0), 0);
+  const maintCost = expenses.filter(e => e.maintTabId).reduce((s,e) => s + Number(e.amount||0), 0);
+  const totalCost = fuelCost + maintCost;
+  return totalDistance > 0 ? totalCost / totalDistance : 0;
+}
+
+function getNextInsuranceDate() {
+  const today = new Date();
+  let due = new Date(today.getFullYear(), today.getMonth(), 20);
+  if (today > due) due = new Date(today.getFullYear(), today.getMonth()+1, 20);
+  return due;
+}
+
+function getNextTaxDate() {
+  const base = maintenanceSettings.taxBaseDate || `${new Date().getFullYear()}-03-01`;
+  let due = new Date(base + 'T00:00:00');
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  while (due < today) due = addMonthsSafe(toInputDate(due), 3);
+  return due;
+}
+
+function getNextNctDate() {
+  const baseMonth = maintenanceSettings.lastNctMonth || `${new Date().getFullYear()}-05`;
+  let due = new Date(baseMonth + '-01T00:00:00');
+  const today = new Date();
+  while (due.getFullYear() < today.getFullYear() ||
+    (due.getFullYear() === today.getFullYear() && due.getMonth() < today.getMonth())) {
+    due = new Date(due.getFullYear() + 1, 4, 1);
+  }
+  return due;
+}
+
+// ── HEADER STATS ────
+function updateHeaderStats() {
+  const openTasks = tasks.filter(t => !t.done).length;
+  // Month expenses includes fuel entries from expenses array
+  const monthExp  = expenses.filter(e => e.date && inSameMonth(e.date, new Date())).reduce((s,e) => s+Number(e.amount||0), 0);
+  const carFuelTotal  = carFuel.reduce((s,e) => s+Number(e.cost||0), 0);
+  const carMaintTotal = expenses.filter(e => e.maintTabId).reduce((s,e) => s+Number(e.amount||0), 0);
+  const carTotal      = carFuelTotal + carMaintTotal;
+  document.getElementById('statTasks').textContent      = openTasks;
+  document.getElementById('statNotes').textContent      = notes.length;
+  document.getElementById('statMonthSpent').textContent = `-€${monthExp.toFixed(0)}`;
+  document.getElementById('statCarSpent').textContent   = `-€${carTotal.toFixed(0)}`;
+}
+
+// ── TAB SWITCHING ────
+function switchTab(tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const section = document.getElementById('section-' + tab);
+  const nav     = document.querySelector(`.nav-item[data-tab="${tab}"]`);
+  if (section) section.classList.add('active');
+  if (nav)     nav.classList.add('active');
+  if (tab === 'dashboard')  renderDashboard();
+  if (tab === 'statistics') renderStatistics();
+  if (tab === 'calendar')   renderCalendar();
+  if (tab === 'expenses')   renderExpenses();
+  if (tab === 'car')        renderCar();
+  if (tab === 'backup')     renderBackupTab();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// Helper to check if date is in last month
+function inLastMonth(dateStr) {
+  if (!dateStr) return false;
+  const d = new Date(dateStr + 'T00:00:00');
+  const now = new Date();
+  const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+  return d.getMonth() === lastMonth.getMonth() && d.getFullYear() === lastMonth.getFullYear();
+}
+
+// ── DASHBOARD ────
+function renderDashboard() {
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('dashGreeting').textContent = greeting;
+  document.getElementById('dashSubtitle').textContent = "Here's your overview";
+
+  // Productivity stats
+  const openTasks = tasks.filter(t => !t.done).length;
+  const completedTasks = tasks.filter(t => t.done).length;
+  document.getElementById('dashOpenTasks').textContent = openTasks;
+  document.getElementById('dashCompletedTasks').textContent = completedTasks;
+  document.getElementById('dashNotes').textContent = notes.length;
+  document.getElementById('dashEvents').textContent = events.length;
+}
+
+// ── STATISTICS ────
+function renderStatistics() {
+  // Last month summary
+  const lastMonthExp = expenses.filter(e => e.date && inLastMonth(e.date)).reduce((s,e) => s+Number(e.amount||0), 0);
+  const lastMonthTasksCompleted = tasks.filter(t => t.done && t.completedAt && inLastMonth(t.completedAt.split('T')[0])).length;
+  const lastMonthNotes = notes.filter(n => {
+    if (!n.date) return false;
+    // Notes store date as DD/MM/YYYY
+    let iso = n.date;
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(iso)) {
+      const [dd, mm, yyyy] = iso.split('/');
+      iso = `${yyyy}-${mm}-${dd}`;
+    }
+    return inLastMonth(iso);
+  }).length;
+  const lastMonthEvents = events.filter(e => e.date && inLastMonth(e.date)).length;
+  document.getElementById('dashLastMonthExpenses').textContent = `-€${lastMonthExp.toFixed(2)}`;
+  document.getElementById('dashLastMonthTasksCompleted').textContent = lastMonthTasksCompleted;
+  document.getElementById('dashLastMonthNotes').textContent = lastMonthNotes;
+  document.getElementById('dashLastMonthEvents').textContent = lastMonthEvents;
+
+  // Productivity stats
+  const openTasks = tasks.filter(t => !t.done).length;
+  const completedTasks = tasks.filter(t => t.done).length;
+  document.getElementById('statsOpenTasks').textContent = openTasks;
+  document.getElementById('statsCompletedTasks').textContent = completedTasks;
+  document.getElementById('statsNotes').textContent = notes.length;
+  document.getElementById('statsEvents').textContent = events.length;
+
+  // Calendar stats
+  const todayStr = toInputDate(new Date());
+  const todayEvents = events.filter(e => e.date === todayStr).length;
+  const monthEvents = events.filter(e => e.date && inSameMonth(e.date, new Date())).length;
+  document.getElementById('statsTodayEvents').textContent = todayEvents;
+  document.getElementById('statsUpcomingEvents').textContent = monthEvents;
+
+  // Expenses stats
+  const monthExp = expenses.filter(e => e.date && inSameMonth(e.date, new Date())).reduce((s,e) => s+Number(e.amount||0), 0);
+  document.getElementById('statsMonthExpenses').textContent = `-€${monthExp.toFixed(2)}`;
+
+  const { start, end } = getFridayWeekRange(new Date());
+  const weekFuture = futureExpenses.filter(e => e.date && isWithinRange(e.date, start, end)).reduce((s,e) => s+Number(e.amount||0), 0);
+  const monthFuture = futureExpenses.filter(e => e.date && inSameMonth(e.date, new Date())).reduce((s,e) => s+Number(e.amount||0), 0);
+  document.getElementById('statsWeekFuture').textContent = `-€${weekFuture.toFixed(2)}`;
+  document.getElementById('statsMonthFuture').textContent = `-€${monthFuture.toFixed(2)}`;
+
+  // Car stats
+  const carFuelTotal = carFuel.reduce((s,e) => s+Number(e.cost||0), 0);
+  const carMaintTotal = expenses.filter(e => e.maintTabId).reduce((s,e) => s+Number(e.amount||0), 0);
+  const carTotal = carFuelTotal + carMaintTotal;
+  const costPerKm = getCarCostPerKm();
+  const currentOdo = getCurrentOdometer();
+  document.getElementById('statsCarTotal').textContent = `-€${carTotal.toFixed(2)}`;
+  document.getElementById('statsCostPerKm').textContent = `€${costPerKm.toFixed(3)}`;
+  document.getElementById('statsOdometer').textContent = `${currentOdo.toFixed(0)} km`;
+  document.getElementById('statsMaintCount').textContent = 7 + customMaintTypes.length;
+}
+
+// ── TASKS ────
+function addTask() {
+  const txt = document.getElementById('taskInput').value.trim();
+  const pri = document.getElementById('taskPriority').value;
+  if (!txt) return;
+  tasks.unshift({ id: Date.now(), text: txt, priority: pri, done: false, createdAt: new Date().toISOString() });
+  document.getElementById('taskInput').value = '';
+  save();
+  renderTasks();
+}
+
+function toggleTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  t.done = !t.done;
+  if (t.done) {
+    t.completedAt = new Date().toISOString();
+  } else {
+    delete t.completedAt;
+  }
+  save();
+  renderTasks();
+}
+
+function editTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  const text = prompt('Edit task', t.text);
+  if (text === null) return;
+  if (!text.trim()) return;
+  t.text = text.trim();
+  save();
+  renderTasks();
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter(x => x.id !== id);
+  save();
+  renderTasks();
+}
+
+function renderTasks() {
+  const q = document.getElementById('taskSearch').value.trim().toLowerCase();
+  const filtered = [...tasks].sort((a,b) => Number(a.done)-Number(b.done)).filter(t => !q || t.text.toLowerCase().includes(q));
+  const list = document.getElementById('taskList');
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty-state"><span class="empty-icon">✨</span><p><strong>All clear!</strong> Add a task above to get started.</p></div>`;
+    return;
+  }
+  list.innerHTML = filtered.map(t => {
+    const created = new Date(t.createdAt || Date.now());
+    const dispDate = `${String(created.getDate()).padStart(2,'0')}/${String(created.getMonth()+1).padStart(2,'0')}/${created.getFullYear()}`;
+    return `
+    <div class="card compact">
+      <div class="task-item">
+        <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleTask(${t.id})"></div>
+        <div class="task-main">
+          <div class="task-text ${t.done ? 'done' : ''}">${escapeHtml(t.text)}</div>
+          <div class="task-sub">${dispDate}</div>
+        </div>
+        <span class="badge badge-${t.priority}">${t.priority}</span>
+        <div class="task-edit" onclick="editTask(${t.id})">✎</div>
+        <div class="task-del" onclick="deleteTask(${t.id})">×</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── NOTES ────
+function addNote() {
+  const title = document.getElementById('noteTitle').value.trim();
+  const body  = document.getElementById('noteBody').value.trim();
+  if (!title && !body) return;
+  const d = new Date();
+  const dispDate = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+  notes.unshift({ id: Date.now(), title: title || 'Untitled', body,
+    color: noteColors[Math.floor(Math.random()*noteColors.length)], date: dispDate });
+  document.getElementById('noteTitle').value = '';
+  document.getElementById('noteBody').value  = '';
+  save();
+  renderNotes();
+}
+
+function editNote(id) {
+  const n = notes.find(x => x.id === id);
+  if (!n) return;
+  const title = prompt('Edit note title', n.title);
+  if (title === null) return;
+  const body = prompt('Edit note content', n.body || '');
+  if (body === null) return;
+  n.title = title.trim() || 'Untitled';
+  n.body  = body.trim();
+  save();
+  renderNotes();
+}
+
+function deleteNote(id) {
+  notes = notes.filter(x => x.id !== id);
+  save();
+  renderNotes();
+}
+
+function renderNotes() {
+  const q = document.getElementById('noteSearch').value.trim().toLowerCase();
+  const filtered = notes.filter(n => (`${n.title} ${n.body}`).toLowerCase().includes(q));
+  const list = document.getElementById('noteList');
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty-state"><span class="empty-icon">📝</span><p><strong>No notes yet</strong> Capture your thoughts above.</p></div>`;
+    return;
+  }
+  list.innerHTML = filtered.map(n => `
+    <div class="card">
+      <div class="note-header">
+        <div class="note-dot" style="background:${escapeHtml(n.color)}"></div>
+        <div class="note-title">${escapeHtml(n.title)}</div>
+      </div>
+      <div class="note-preview">${escapeHtml(n.body || '—')}</div>
+      <div class="note-footer">
+        <div class="note-date">${escapeHtml(n.date)}</div>
+        <div style="display:flex;gap:2px">
+          <div class="task-edit" onclick="editNote(${n.id})">✎</div>
+          <div class="task-del" onclick="deleteNote(${n.id})">×</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── CALENDAR ────
+let calDate     = new Date(now.getFullYear(), now.getMonth(), 1);
+let selectedDay = now.getDate();
+
+function renderCalendar() {
+  const year  = calDate.getFullYear();
+  const month = calDate.getMonth();
+  document.getElementById('calMonthLabel').textContent = `${months[month]} ${year}`;
+  const firstDay    = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const prevDays    = new Date(year, month, 0).getDate();
+  const labels = ['S','M','T','W','T','F','S'];
+  let html = labels.map(d => `<div class="cal-day-label">${d}</div>`).join('');
+  for (let i = 0; i < firstDay; i++) html += `<div class="cal-day">${prevDays-firstDay+1+i}</div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday    = d===now.getDate() && month===now.getMonth() && year===now.getFullYear();
+    const isSelected = d===selectedDay;
+    const hasEvent   = events.some(e => {
+      const ed = new Date(e.date + 'T00:00:00');
+      return ed.getDate()===d && ed.getMonth()===month && ed.getFullYear()===year;
+    });
+    html += `<div class="cal-day cur-month ${isToday?'today':''} ${isSelected&&!isToday?'selected':''} ${hasEvent?'has-event':''}" onclick="selectDay(${d})">${d}</div>`;
+  }
+  document.getElementById('calGrid').innerHTML = html;
+  renderEvents();
+}
+
+function selectDay(day) { selectedDay = day; renderCalendar(); }
+function changeMonth(dir) { calDate.setMonth(calDate.getMonth()+dir); renderCalendar(); }
+
+function renderEvents() {
+  const year  = calDate.getFullYear();
+  const month = calDate.getMonth();
+  const dayEvents = events.filter(e => {
+    const ed = new Date(e.date + 'T00:00:00');
+    return ed.getDate()===selectedDay && ed.getMonth()===month && ed.getFullYear()===year;
+  }).sort((a,b) => (a.time || '99:99').localeCompare(b.time || '99:99'));
+
+  // Label with British date
+  const dd = String(selectedDay).padStart(2,'0');
+  const mm = String(month+1).padStart(2,'0');
+  document.getElementById('calEventsLabel').textContent = `Events — ${dd}/${mm}/${year}`;
+
+  const list = document.getElementById('eventList');
+  if (!dayEvents.length) {
+    list.innerHTML = `<div class="empty-state"><span class="empty-icon">📅</span><p>No events on this day.<br>Tap <strong>+ Add Event</strong> to create one.</p></div>`;
+    return;
+  }
+  list.innerHTML = dayEvents.map(e => `
+    <div class="card compact">
+      <div class="event-item">
+        <div class="event-dot"></div>
+        <div class="event-info">
+          <div class="event-title">${escapeHtml(e.title)}</div>
+          <div class="event-time">${escapeHtml(e.time || 'All day')}${e.notes ? ' · ' + escapeHtml(e.notes) : ''}</div>
+        </div>
+        <div class="task-edit" onclick="openEventModal(${e.id})">✎</div>
+        <div class="task-del" onclick="deleteEvent(${e.id})">×</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openEventModal(id = null) {
+  editingEventId = id;
+  if (id) {
+    const e = events.find(x => x.id === id);
+    if (!e) return;
+    document.getElementById('eventModalTitle').textContent = 'Edit Event';
+    document.getElementById('evtTitle').value = e.title || '';
+    document.getElementById('evtDate').value  = e.date  || '';
+    document.getElementById('evtTime').value  = e.time  || '';
+    document.getElementById('evtNotes').value = e.notes || '';
+  } else {
+    document.getElementById('eventModalTitle').textContent = 'New Event';
+    document.getElementById('evtTitle').value = '';
+    document.getElementById('evtDate').value  =
+      `${calDate.getFullYear()}-${String(calDate.getMonth()+1).padStart(2,'0')}-${String(selectedDay).padStart(2,'0')}`;
+    document.getElementById('evtTime').value  = '';
+    document.getElementById('evtNotes').value = '';
+  }
+  document.getElementById('eventModal').classList.add('open');
+}
+
+function closeEventModal() {
+  editingEventId = null;
+  document.getElementById('eventModal').classList.remove('open');
+}
+
+function saveEvent() {
+  const title     = document.getElementById('evtTitle').value.trim();
+  const date      = document.getElementById('evtDate').value;
+  const time      = document.getElementById('evtTime').value;
+  const notesText = document.getElementById('evtNotes').value.trim();
+  if (!title || !date) return;
+  if (editingEventId) {
+    const e = events.find(x => x.id === editingEventId);
+    if (e) { e.title = title; e.date = date; e.time = time; e.notes = notesText; }
+  } else {
+    events.push({ id: Date.now(), title, date, time, notes: notesText });
+  }
+  save();
+  closeEventModal();
+  renderCalendar();
+}
+
+function deleteEvent(id) {
+  events = events.filter(x => x.id !== id);
+  save();
+  renderCalendar();
+}
+
+// ── EXPENSES ────
+let expRecurType = 'onetime';
+
+function setExpRecur(type) {
+  expRecurType = type;
+  ['onetime','weekly','everyxmonths'].forEach(t => {
+    const btn = document.getElementById('expRecurBtn_' + t);
+    if (btn) btn.classList.toggle('active', t === type);
+  });
+  const weeklyEl = document.getElementById('expRecurSub_weekly');
+  const monthsEl = document.getElementById('expRecurSub_everyxmonths');
+  if (weeklyEl) weeklyEl.style.display = type === 'weekly' ? 'block' : 'none';
+  if (monthsEl) monthsEl.style.display = type === 'everyxmonths' ? 'block' : 'none';
+}
+
+function addExpense() {
+  const name   = document.getElementById('expName').value.trim();
+  const amount = parseFloat(document.getElementById('expAmount').value);
+  const cat    = document.getElementById('expCategory').value;
+  const date   = document.getElementById('expDate').value || toInputDate(new Date());
+  if (!name || isNaN(amount) || amount <= 0) return;
+
+  // Capture recurrence data
+  const recurrence = expRecurType;
+  const recurWeekday = recurrence === 'weekly'
+    ? parseInt(document.getElementById('expRecurWeekday').value || '5')
+    : undefined;
+  const recurMonths = recurrence === 'everyxmonths'
+    ? parseInt(document.getElementById('expRecurMonths').value || '1')
+    : undefined;
+
+  const expObj = { id: Date.now(), name, amount, cat, date, recurrence };
+  if (recurWeekday !== undefined) expObj.recurWeekday = recurWeekday;
+  if (recurMonths  !== undefined) expObj.recurMonths  = recurMonths;
+
+  expenses.unshift(expObj);
+  document.getElementById('expName').value   = '';
+  document.getElementById('expAmount').value = '';
+  document.getElementById('expDate').value   = toInputDate(new Date());
+  // Reset recurrence UI
+  setExpRecur('onetime');
+  save();
+  renderExpenses();
+}
+
+function editExpense(id) {
+  const item = expenses.find(x => x.id === id);
+  if (!item) return;
+  const name   = prompt('Edit name', item.name);
+  if (name === null) return;
+  const amount = prompt('Edit amount', item.amount);
+  if (amount === null) return;
+  const parsed = parseFloat(amount);
+  if (!name.trim() || isNaN(parsed) || parsed <= 0) return;
+  item.name   = name.trim();
+  item.amount = parsed;
+  save();
+  renderExpenses();
+}
+
+function deleteExpense(id) {
+  // If this expense is a fuel entry, also remove from carFuel by matching fuelId
+  const item = expenses.find(x => x.id === id);
+  if (item && item.fuelId) {
+    carFuel = carFuel.filter(x => x.id !== item.fuelId);
+  }
+  expenses = expenses.filter(x => x.id !== id);
+  save();
+  renderExpenses();
+  renderCar();
+}
+
+// Recurrence selection — scoped to the future-expenses form only
+function selectRecurrence(type) {
+  const form = document.getElementById('futureExpForm');
+  const scope = form || document;
+  scope.querySelectorAll('.recur-btn[data-recur]').forEach(b => b.classList.remove('active'));
+  const target = scope.querySelector(`.recur-btn[data-recur="${type}"]`);
+  if (target) target.classList.add('active');
+  document.getElementById('recurWeeklySub').classList.toggle('visible', type === 'weekly');
+  document.getElementById('recurMonthlySub').classList.toggle('visible', type === 'monthly');
+}
+
+function addFutureExpense() {
+  const name   = document.getElementById('futureExpName').value.trim();
+  const amount = parseFloat(document.getElementById('futureExpAmount').value);
+  const cat    = document.getElementById('futureExpCategory').value;
+  const date   = document.getElementById('futureExpDate').value;
+  if (!name || isNaN(amount) || amount <= 0 || !date) return;
+  
+  // Get recurrence settings — scope to future-expenses form only
+  const activeRecurBtn = document.querySelector('#futureExpForm .recur-btn[data-recur].active')
+    || document.querySelector('.recur-btn[data-recur].active');
+  const recurType = activeRecurBtn ? activeRecurBtn.dataset.recur : 'onetime';
+  const recurData = { type: recurType };
+  if (recurType === 'weekly') {
+    recurData.weekday = document.getElementById('recurWeekday').value;
+  } else if (recurType === 'monthly') {
+    recurData.months = parseInt(document.getElementById('recurMonths').value) || 1;
+  }
+  
+  futureExpenses.unshift({ id: Date.now(), name, amount, cat, date, recurrence: recurData });
+  document.getElementById('futureExpName').value   = '';
+  document.getElementById('futureExpAmount').value = '';
+  document.getElementById('futureExpDate').value   = toInputDate(new Date());
+  // Reset recurrence to default
+  selectRecurrence('onetime');
+  save();
+  renderExpenses();
+}
+
+function editFutureExpense(id) {
+  const item = futureExpenses.find(x => x.id === id);
+  if (!item) return;
+  const name   = prompt('Edit future expense name', item.name);
+  if (name === null) return;
+  const amount = prompt('Edit amount', item.amount);
+  if (amount === null) return;
+  const parsed = parseFloat(amount);
+  if (!name.trim() || isNaN(parsed) || parsed <= 0) return;
+  item.name   = name.trim();
+  item.amount = parsed;
+  save();
+  renderExpenses();
+}
+
+function deleteFutureExpense(id) {
+  futureExpenses = futureExpenses.filter(x => x.id !== id);
+  save();
+  renderExpenses();
+}
+
+function markFutureExpensePaid(id) {
+  const item = futureExpenses.find(x => x.id === id);
+  if (!item) return;
+  
+  // Add to expenses — preserve maintTabId for car items so they show in car history/totals
+  const paidEntry = { id: Date.now(), name: item.name, amount: Number(item.amount || 0),
+    cat: item.cat, date: item.date || toInputDate(new Date()) };
+  if (item.carTabId) { paidEntry.maintTabId = item.carTabId; paidEntry.name = 'Car / ' + item.name; }
+  if (item.note) paidEntry.note = item.note;
+  expenses.unshift(paidEntry);
+  
+  // If recurring, create next occurrence
+  if (item.recurrence && item.recurrence.type !== 'onetime') {
+    const currentDate = new Date(item.date + 'T00:00:00');
+    let nextDate;
+    
+    if (item.recurrence.type === 'weekly') {
+      // Add 7 days
+      nextDate = new Date(currentDate);
+      nextDate.setDate(nextDate.getDate() + 7);
+    } else if (item.recurrence.type === 'monthly') {
+      // Add X months
+      const months = item.recurrence.months || 1;
+      nextDate = addMonthsSafe(item.date, months);
+    }
+    
+    if (nextDate) {
+      const nextDateStr = toInputDate(nextDate);
+      const nextEntry = {
+        id: Date.now() + 1,
+        name: item.name,
+        amount: item.amount,
+        cat: item.cat,
+        date: nextDateStr,
+        recurrence: item.recurrence
+      };
+      if (item.carTabId) nextEntry.carTabId = item.carTabId;
+      if (item.note) nextEntry.note = item.note;
+      futureExpenses.push(nextEntry);
+    }
+  }
+  
+  // Remove current future expense
+  futureExpenses = futureExpenses.filter(x => x.id !== id);
+  save();
+  renderExpenses();
+  if (item.carTabId) renderCar();
+}
+
+function renderExpenses() {
+  const q              = document.getElementById('expenseSearch').value.trim().toLowerCase();
+  const filtered       = expenses.filter(e => (`${e.name} ${e.cat} ${e.fuelOdo||''}`).toLowerCase().includes(q));
+  const futureFiltered = futureExpenses.filter(e => (`${e.name} ${e.cat}`).toLowerCase().includes(q));
+
+  const total      = expenses.reduce((s,e) => s+Number(e.amount||0), 0);
+  const monthTotal = expenses.filter(e => e.date && inSameMonth(e.date, new Date())).reduce((s,e) => s+Number(e.amount||0), 0);
+  const { start, end } = getFridayWeekRange(new Date());
+  const futureWeek  = futureExpenses.filter(e => e.date && isWithinRange(e.date, start, end)).reduce((s,e) => s+Number(e.amount||0), 0);
+  const futureMonth = futureExpenses.filter(e => e.date && inSameMonth(e.date, new Date())).reduce((s,e) => s+Number(e.amount||0), 0);
+
+  document.getElementById('expHeroTotal').textContent     = `-€${total.toFixed(2)}`;
+  document.getElementById('expHeroSub').textContent       = `This month: -€${monthTotal.toFixed(2)}`;
+  document.getElementById('futureWeekTotal').textContent  = `-€${futureWeek.toFixed(2)}`;
+  document.getElementById('futureMonthTotal').textContent = `-€${futureMonth.toFixed(2)}`;
+
+  // Category breakdown — merge Fuel into Car for display
+  const cats = {};
+  expenses.forEach(e => {
+    const displayCat = (e.cat === 'Fuel') ? 'Car' : e.cat;
+    cats[displayCat] = (cats[displayCat] || 0) + Number(e.amount || 0);
+  });
+  const top = Object.entries(cats).sort((a,b) => b[1]-a[1]).slice(0, 4);
+  document.getElementById('expBreakdown').innerHTML = top.length
+    ? top.map(([cat, amt]) => `
+      <div class="exp-cat-pill">
+        <div style="font-size:18px">${catEmoji[cat] || '📦'}</div>
+        <div class="cat-amt">-€${amt.toFixed(0)}</div>
+        <div class="cat-name">${escapeHtml(cat)}</div>
+      </div>`).join('')
+    : '';
+
+  // Expense list
+  const list = document.getElementById('expenseList');
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty-state"><span class="empty-icon">💸</span><p><strong>No expenses yet</strong> Track what you spend above.</p></div>`;
+  } else {
+    list.innerHTML = filtered.slice(0, 60).map(e => {
+      const isFuel = !!e.fuelId || e.cat === 'Fuel';
+      const fuelSub = isFuel && e.fuelOdo ? `<div class="fuel-sub">⛽ ${Number(e.fuelOdo).toFixed(0)} km odometer${e.fuelNote ? ' · ' + escapeHtml(e.fuelNote) : ''}</div>` : '';
+      return `
+      <div class="card compact">
+        <div class="expense-item">
+          <div class="expense-icon" style="background:${catColors[e.cat]||'#333'}22">${catEmoji[e.cat]||'📦'}</div>
+          <div class="expense-info">
+            <div class="expense-name">${escapeHtml(e.name)}</div>
+            <div class="expense-cat">${(e.cat === 'Fuel' ? 'Car / Fuel' : escapeHtml(e.cat))} · ${britishDate(e.date)}${(()=>{ const r = typeof e.recurrence === 'string' ? e.recurrence : ''; return r && r !== 'onetime' ? ' · <span style="color:var(--lavender);font-size:10px;font-weight:600">' + (r === 'weekly' ? '🔁 Weekly' : '🔁 Every ' + (e.recurMonths||1) + ' mo') + '</span>' : ''; })()}</div>
+            ${fuelSub}
+          </div>
+          <div style="display:flex;align-items:center;gap:4px">
+            <div class="amount-negative">-€${Number(e.amount).toFixed(2)}</div>
+            ${!isFuel ? `<div class="task-edit" onclick="editExpense(${e.id})">✎</div>` : ''}
+            <div class="task-del" onclick="deleteExpense(${e.id})">×</div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Future expenses list
+  const futureList = document.getElementById('futureExpenseList');
+  if (!futureFiltered.length) {
+    futureList.innerHTML = `<div class="empty-state"><span class="empty-icon">⏳</span><p>No future expenses planned.</p></div>`;
+  } else {
+    futureList.innerHTML = futureFiltered.sort((a,b) => (a.date||'').localeCompare(b.date||'')).map(e => {
+      const dueDate = e.date ? new Date(e.date + 'T00:00:00') : null;
+      const today   = new Date(); today.setHours(0,0,0,0);
+      const isDue   = dueDate && dueDate <= today;
+      
+      // Recurrence display
+      let recurText = '';
+      if (e.recurrence && e.recurrence.type !== 'onetime') {
+        if (e.recurrence.type === 'weekly') {
+          recurText = ' · <span style="color:var(--lavender);font-size:10px;font-weight:600">🔁 Weekly</span>';
+        } else if (e.recurrence.type === 'monthly') {
+          recurText = ` · <span style="color:var(--lavender);font-size:10px;font-weight:600">🔁 Every ${e.recurrence.months || 1} mo</span>`;
+        }
+      }
+      
+      return `
+        <div class="card compact">
+          <div class="expense-item">
+            <div class="expense-icon" style="background:${catColors[e.cat]||'#333'}22">${catEmoji[e.cat]||'📦'}</div>
+            <div class="expense-info">
+              <div class="expense-name">${escapeHtml(e.name)}</div>
+              <div class="expense-cat">${escapeHtml(e.cat)} · Due ${britishDate(e.date)}${recurText}${isDue ? ' · <span style="color:#2dd4a0;font-weight:600">Ready to pay</span>' : e.carTabId ? ' · <span style="color:var(--sky);font-weight:600">Scheduled</span>' : ''}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:flex-end">
+              <div class="amount-negative">-€${Number(e.amount).toFixed(2)}</div>
+              ${(isDue || e.carTabId) ? `<button class="btn-pill" onclick="markFutureExpensePaid(${e.id})">✓ Paid</button>` : ''}
+              <div class="task-edit" onclick="editFutureExpense(${e.id})">✎</div>
+              <div class="task-del" onclick="deleteFutureExpense(${e.id})">×</div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+}
+
+// ── INITIAL ODOMETER ────
+function saveInitialOdometer() {
+  const odo  = parseFloat(document.getElementById('initialOdoReading').value);
+  const date = document.getElementById('initialOdoDate').value;
+  if (isNaN(odo) || odo <= 0 || !date) {
+    alert('Please enter a valid odometer reading and date.');
+    return;
+  }
+  initialOdoData = { odo, date };
+  localStorage.setItem('org_initial_odo', JSON.stringify(initialOdoData));
+  document.getElementById('initialOdoSetup').style.display = 'none';
+  renderCar();
+}
+
+function showInitialOdoSetup() {
+  if (!initialOdoData && carFuel.length === 0) {
+    document.getElementById('initialOdoSetup').style.display = 'block';
+    document.getElementById('initialOdoDate').value = toInputDate(new Date());
+  } else {
+    document.getElementById('initialOdoSetup').style.display = 'none';
+  }
+}
+
+// ── CAR FUEL ────
+// Adding a fuel entry:
+//  1. Saves to carFuel[] for analytics (odo, cost, date, note)
+//  2. Also creates an expense entry (cat: Fuel) with a fuelId reference
+function addCarFuel() {
+  const odo  = parseFloat(document.getElementById('carOdo').value);
+  const cost = parseFloat(document.getElementById('carFuelCost').value);
+  const date = document.getElementById('carFuelDate').value;
+  const note = document.getElementById('carFuelNote').value.trim();
+  if (isNaN(odo) || isNaN(cost) || cost <= 0 || !date) return;
+
+  const fuelId = Date.now();
+  // Save to carFuel for analytics
+  carFuel.push({ id: fuelId, odo, cost, date, note });
+  carFuel.sort((a,b) => a.odo - b.odo);
+
+  // Also push to expenses as a Fuel entry
+  const expId = fuelId + Math.floor(Math.random() * 900) + 100; // offset to avoid collision
+  expenses.unshift({
+    id: expId,
+    name: 'Fuel',
+    amount: cost,
+    cat: 'Fuel',
+    date,
+    fuelId,       // link back to carFuel entry
+    fuelOdo: odo, // store odo for display
+    fuelNote: note
+  });
+
+  document.getElementById('carOdo').value      = '';
+  document.getElementById('carFuelCost').value = '';
+  document.getElementById('carFuelDate').value = toInputDate(new Date());
+  document.getElementById('carFuelNote').value = '';
+  save();
+  renderCar();
+  renderExpenses();
+}
+
+function deleteCarFuel(id) {
+  // Remove from carFuel
+  carFuel = carFuel.filter(x => x.id !== id);
+  // Remove matching expense entry
+  expenses = expenses.filter(x => x.fuelId !== id);
+  save();
+  renderCar();
+  renderExpenses();
+}
+
+function saveMaintenanceSettings() {
+  if (maintData.oil       && maintData.oil.lastKm)        maintenanceSettings.lastOilKm         = parseFloat(maintData.oil.lastKm) || 0;
+  if (maintData.airfilter && maintData.airfilter.lastKm)  maintenanceSettings.lastAirFilterKm   = parseFloat(maintData.airfilter.lastKm) || 0;
+  if (maintData.nct       && maintData.nct.dueDate)       maintenanceSettings.lastNctMonth      = maintData.nct.dueDate;
+  if (maintData.insurance && maintData.insurance.dueDate) maintenanceSettings.insuranceBaseDate = maintData.insurance.dueDate;
+  if (maintData.roadtax   && maintData.roadtax.dueDate)   maintenanceSettings.taxBaseDate       = maintData.roadtax.dueDate;
+  if (maintData.insurance && maintData.insurance.amount)  maintenanceSettings.insuranceAmount   = parseFloat(maintData.insurance.amount) || 80;
+  if (maintData.roadtax   && maintData.roadtax.amount)    maintenanceSettings.taxAmount         = parseFloat(maintData.roadtax.amount) || 79;
+  save();
+  renderCar();
+}
+
+function toggleMaintSetup() { /* replaced by tab UI */ }
+
+function renderCar() {
+  // Show initial odometer setup if needed
+  showInitialOdoSetup();
+  
+  const sorted = [...carFuel].sort((a,b) => a.odo - b.odo);
+  let totalDistance = 0;
+  for (let i = 1; i < sorted.length; i++) {
+    const diff = Number(sorted[i].odo) - Number(sorted[i-1].odo);
+    if (diff > 0) totalDistance += diff;
+  }
+  const totalCost  = sorted.reduce((s,e) => s+Number(e.cost||0), 0);
+  // Include ALL car-related maintenance expenses (maintTabId) in cost per km
+  const totalMaintCost = expenses.filter(e => e.maintTabId).reduce((s,e) => s+Number(e.amount||0), 0);
+  const totalCarCost   = totalCost + totalMaintCost;
+  const costPerKm  = totalDistance > 0 ? totalCarCost / totalDistance : 0;
+  const currentOdo = getCurrentOdometer();
+  const nextOilKm  = (Number(maintenanceSettings.lastOilKm||0)||0) + 10000;
+  const nextAirKm  = (Number(maintenanceSettings.lastAirFilterKm||0)||0) + 20000;
+  // Get next due dates from future expenses (carTabId) if available, else keep old helpers
+  function getNextCarTabDate(tabId) {
+    const upcoming = futureExpenses
+      .filter(e => e.carTabId === tabId && e.date)
+      .sort((a,b) => a.date.localeCompare(b.date));
+    return upcoming.length > 0 ? new Date(upcoming[0].date + 'T00:00:00') : null;
+  }
+  const insuranceDue = getNextCarTabDate('insurance') || getNextInsuranceDate();
+  const taxDue       = getNextCarTabDate('roadtax')   || getNextTaxDate();
+  const nctDue       = getNextCarTabDate('nct')       || getNextNctDate();
+
+  // Month fuel cost (fuel only)
+  const monthFuel = carFuel.filter(e => e.date && inSameMonth(e.date, new Date())).reduce((s,e) => s+Number(e.cost||0), 0);
+  // Month maintenance cost
+  const monthMaint = expenses.filter(e => e.maintTabId && e.date && inSameMonth(e.date, new Date())).reduce((s,e) => s+Number(e.amount||0), 0);
+  // Total car expenses this month
+  const monthCarTotal = monthFuel + monthMaint;
+
+  // Fill-ups this month only
+  const monthFillups = carFuel.filter(e => e.date && inSameMonth(e.date, new Date())).length;
+
+  // Avg fill = avg cost per week (total fuel this month / weeks with fill-ups)
+  const monthFuelEntries = carFuel.filter(e => e.date && inSameMonth(e.date, new Date()));
+  let avgFillPerWeek = 0;
+  if (monthFuelEntries.length > 0) {
+    // Find unique ISO week numbers for this month's entries
+    const weekNums = new Set(monthFuelEntries.map(e => {
+      const d = new Date(e.date + 'T00:00:00');
+      const jan1 = new Date(d.getFullYear(), 0, 1);
+      return Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+    }));
+    const weeksWithFillups = weekNums.size || 1;
+    const monthFuelCost = monthFuelEntries.reduce((s,e) => s+Number(e.cost||0), 0);
+    avgFillPerWeek = monthFuelCost / weeksWithFillups;
+  }
+
+  // ── Hero stats ──
+  document.getElementById('carCostPerKm').textContent     = `€${costPerKm.toFixed(3)}`;
+  document.getElementById('carFuelTotal').textContent     = `-€${totalCost.toFixed(2)}`;
+  document.getElementById('carDistanceTotal').textContent = totalDistance > 0 ? `${totalDistance.toFixed(0)} km` : '0 km';
+  // Split decimal display for hero KPI
+  const _mct = monthCarTotal.toFixed(2);
+  const _mctParts = _mct.split('.');
+  document.getElementById('carMonthFuel').innerHTML =
+    `<span class="hero-sign">-</span>€${_mctParts[0]}<span class="hero-decimal">.${_mctParts[1]}</span>`;
+  document.getElementById('carFuelEntries').textContent   = monthFillups;
+  document.getElementById('carAvgFill').textContent       = `-€${avgFillPerWeek.toFixed(2)}`;
+
+  // Odometer subtitle
+  const _odoSub = currentOdo > 0
+    ? `Odometer: ${currentOdo.toLocaleString()} km`
+      + (initialOdoData && initialOdoData.date ? ` · since ${britishDate(initialOdoData.date)}` : '')
+    : 'No odometer data yet';
+  document.getElementById('carOdoSubtitle').textContent = _odoSub;
+
+  // Hidden compat elements (used by dashboard)
+  document.getElementById('maintCurrentOdo').textContent   = `${currentOdo.toFixed(0)} km`;
+  document.getElementById('maintOilDue').textContent       = nextOilKm > 0 ? `${nextOilKm.toFixed(0)} km` : '—';
+  document.getElementById('maintAirDue').textContent       = nextAirKm > 0 ? `${nextAirKm.toFixed(0)} km` : '—';
+  document.getElementById('maintInsuranceDue').textContent = britishDateObj(insuranceDue);
+
+  // ── Last fuel entry ──
+  const lastFuelEl = document.getElementById('carLastFuelEntry');
+  if (sorted.length === 0) {
+    lastFuelEl.innerHTML = `
+      <div class="car-last-fuel">
+        <div class="car-last-fuel-icon">⛽</div>
+        <div class="car-last-fuel-body">
+          <div class="car-last-fuel-amount" style="color:var(--text-dim);font-size:18px">No entries yet</div>
+          <div class="car-last-fuel-meta">Add your first fuel fill-up below</div>
+        </div>
+      </div>`;
+  } else {
+    const last = sorted[sorted.length - 1];
+    const prev = sorted.length > 1 ? sorted[sorted.length - 2] : null;
+    const distSinceLast = prev ? Math.max(0, Number(last.odo) - Number(prev.odo)) : null;
+    lastFuelEl.innerHTML = `
+      <div class="car-last-fuel">
+        <div class="car-last-fuel-icon">⛽</div>
+        <div class="car-last-fuel-body">
+          <div class="car-last-fuel-amount">-€${Number(last.cost).toFixed(2)}</div>
+          <div class="car-last-fuel-meta">
+            <span>Odometer:</span> ${Number(last.odo).toLocaleString()} km<br>
+            <span>Date:</span> ${britishDate(last.date)}
+            ${last.note ? `<br><span>Note:</span> ${escapeHtml(last.note)}` : ''}
+            ${distSinceLast !== null ? `<br><span>Distance since prev:</span> ${distSinceLast.toFixed(0)} km` : ''}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // ── Car Expenses History (fuel + maintenance) ──
+  const histEl = document.getElementById('carFuelHistory');
+  // Build unified list: fuel entries + maintenance expenses
+  const fuelItems = sorted.map((e, idx) => ({
+    type: 'fuel', id: e.id, amount: Number(e.cost||0), date: e.date,
+    icon: '⛽', label: 'Fuel Fill-up',
+    sub: `Odometer: ${Number(e.odo).toLocaleString()} km`,
+    note: e.note || '',
+    sortDate: e.date || '0000-00-00'
+  }));
+  const maintItems = expenses.filter(e => e.maintTabId).map(e => ({
+    type: 'maint', id: e.id, amount: Number(e.amount||0), date: e.date,
+    icon: (() => {
+      const allT = getAllMaintTabs();
+      const t = allT.find(t => t.id === e.maintTabId);
+      return t ? t.icon : '🔧';
+    })(),
+    label: e.name || 'Maintenance',
+    sub: e.cat || 'Car',
+    note: '',
+    sortDate: e.date || '0000-00-00'
+  }));
+  // Also include future expenses that came from the Car tab (insurance/nct/roadtax)
+  const carFutureItems = futureExpenses.filter(e => e.carTabId).map(e => ({
+    type: 'future', id: e.id, amount: Number(e.amount||0), date: e.date,
+    icon: (() => { const allT = getAllMaintTabs(); const t = allT.find(t => t.id === e.carTabId); return t ? t.icon : '📋'; })(),
+    label: e.name + ' (Planned)',
+    sub: e.note || 'Planned expense',
+    note: e.note || '',
+    sortDate: e.date || '0000-00-00'
+  }));
+  const allCarItems = [...fuelItems, ...maintItems, ...carFutureItems].sort((a,b) => b.sortDate.localeCompare(a.sortDate));
+
+  if (allCarItems.length === 0) {
+    histEl.innerHTML = `<div class="empty-state"><span class="empty-icon">🚗</span><p><strong>No car expenses yet</strong>Add a fuel fill-up or maintenance entry.</p></div>`;
+  } else {
+    histEl.innerHTML = allCarItems.map(e => {
+      const dateObj = e.date ? new Date(e.date + 'T00:00:00') : null;
+      const dayStr  = dateObj ? String(dateObj.getDate()).padStart(2,'0') + '/' + String(dateObj.getMonth()+1).padStart(2,'0') : '—';
+      const delFn   = e.type === 'fuel' ? `deleteCarFuel(${e.id})` : e.type === 'future' ? `deleteFutureExpense(${e.id})` : `deleteExpense(${e.id})`;
+      return `
+        <div class="fuel-entry-card">
+          <div class="fuel-entry-left">
+            <div class="fuel-entry-icon">${e.icon}</div>
+            <div class="fuel-entry-date-short">${dayStr}</div>
+          </div>
+          <div class="fuel-entry-body">
+            <div class="fuel-entry-amount">-€${e.amount.toFixed(2)}</div>
+            <div class="fuel-entry-details">${escapeHtml(e.label)} · ${britishDate(e.date)}</div>
+            <div class="fuel-entry-details" style="color:var(--text-dim)">${escapeHtml(e.sub)}</div>
+            ${e.note ? `<div class="fuel-entry-note">📍 ${escapeHtml(e.note)}</div>` : ''}
+          </div>
+          <div class="task-del" onclick="${delFn}">×</div>
+        </div>`;
+    }).join('');
+  }
+
+  // Maintenance form values are pre-filled by buildMaintPanelHTML via maintData/maintenanceSettings
+
+  // ── Maintenance reminder cards ──
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  function maintStatus(dueKm, currentKm) {
+    if (!dueKm || !currentKm) return 'ok';
+    const remaining = dueKm - currentKm;
+    if (remaining <= 0)    return 'alert';
+    if (remaining <= 1000) return 'warn';
+    return 'ok';
+  }
+  function maintStatusDate(dueDate) {
+    const diff = Math.ceil((dueDate - today) / (1000*60*60*24));
+    if (diff <= 0)  return 'alert';
+    if (diff <= 14) return 'warn';
+    return 'ok';
+  }
+  function statusLabel(s) {
+    if (s === 'alert') return { cls:'alert', txt:'Due Now' };
+    if (s === 'warn')  return { cls:'warn',  txt:'Soon' };
+    return { cls:'ok', txt:'OK' };
+  }
+
+  const oilStatus  = maintStatus(nextOilKm, currentOdo);
+  const airStatus  = maintStatus(nextAirKm, currentOdo);
+  const insStatus  = maintStatusDate(insuranceDue);
+  const nctStatus  = maintStatusDate(nctDue);
+  const taxStatus  = maintStatusDate(taxDue);
+
+  const oilRemaining = currentOdo > 0 && nextOilKm > 0 ? Math.max(0, nextOilKm - currentOdo) : null;
+  const airRemaining = currentOdo > 0 && nextAirKm > 0 ? Math.max(0, nextAirKm - currentOdo) : null;
+
+  // Mechanic & Car Parts last done dates
+  const mechanicData  = maintData['mechanic']  || {};
+  const carpartsData  = maintData['carparts']  || {};
+  const mechanicNext  = mechanicData.nextDue  ? new Date(mechanicData.nextDue  + 'T00:00:00') : null;
+  const carpartsNext  = carpartsData.nextDue  ? new Date(carpartsData.nextDue  + 'T00:00:00') : null;
+  const mechStatus    = mechanicNext  ? maintStatusDate(mechanicNext)  : 'ok';
+  const carpartsStatus = carpartsNext ? maintStatusDate(carpartsNext)  : 'ok';
+
+  const reminders = [
+    {
+      icon: '🛢️', iconCls: 'purple', title: 'Oil Change',
+      next: nextOilKm > 0 ? `Next at ${nextOilKm.toLocaleString()} km` : 'Set last oil change km',
+      sub:  oilRemaining !== null ? `${oilRemaining.toLocaleString()} km remaining` : 'Every 10,000 km',
+      status: oilStatus
+    },
+    {
+      icon: '💨', iconCls: 'sky', title: 'Air Filter',
+      next: nextAirKm > 0 ? `Next at ${nextAirKm.toLocaleString()} km` : 'Set last air filter km',
+      sub:  airRemaining !== null ? `${airRemaining.toLocaleString()} km remaining` : 'Every 20,000 km',
+      status: airStatus
+    },
+    {
+      icon: '🔧', iconCls: 'purple', title: 'Mechanic',
+      next: mechanicNext ? `Next: ${britishDateObj(mechanicNext)}` : 'Set next visit date',
+      sub:  mechanicData.lastDate ? `Last: ${britishDate(mechanicData.lastDate)}` : 'No visits recorded',
+      status: mechStatus
+    },
+    {
+      icon: '⚙️', iconCls: 'sky', title: 'Car Parts',
+      next: carpartsNext ? `Next: ${britishDateObj(carpartsNext)}` : 'No upcoming parts',
+      sub:  carpartsData.lastDate ? `Last: ${britishDate(carpartsData.lastDate)}` : 'No parts recorded',
+      status: carpartsStatus
+    },
+    {
+      icon: '🛡️', iconCls: 'mint', title: 'Insurance',
+      next: `Next: ${britishDateObj(insuranceDue)}`,
+      sub:  `~${formatMoney(maintenanceSettings.insuranceAmount||80)} · monthly`,
+      status: insStatus
+    },
+    {
+      icon: '📋', iconCls: 'gold', title: 'NCT',
+      next: `Next: ${britishDateObj(nctDue)}`,
+      sub:  'Annual · every May',
+      status: nctStatus
+    },
+    {
+      icon: '💳', iconCls: 'coral', title: 'Road Tax',
+      next: `Next: ${britishDateObj(taxDue)}`,
+      sub:  `~${formatMoney(maintenanceSettings.taxAmount||79)} · quarterly`,
+      status: taxStatus
+    }
+  ];
+
+  // Add custom types with showInList=true to reminders
+  customMaintTypes.filter(ct => ct.showInList).forEach(ct => {
+    const ctData = maintData['custom_' + ct.id] || {};
+    const ctLastKm = Number(ctData.lastKm || ct.lastKm || 0);
+    const ctInterval = Number(ctData.intervalKm || ct.intervalKm || 0);
+    const ctNextKm = ctLastKm && ctInterval ? ctLastKm + ctInterval : 0;
+    const ctStatus = ctNextKm ? maintStatus(ctNextKm, currentOdo) : 'ok';
+    const ctRemaining = ctNextKm && currentOdo ? Math.max(0, ctNextKm - currentOdo) : null;
+    reminders.push({
+      icon: '🔧', iconCls: 'purple', title: ct.name,
+      next: ctNextKm > 0 ? `Next at ${ctNextKm.toLocaleString()} km` : (ctData.nextDue ? `Due: ${britishDate(ctData.nextDue)}` : 'Set due date'),
+      sub:  ctRemaining !== null ? `${ctRemaining.toLocaleString()} km remaining` : (ctInterval ? `Every ${ctInterval.toLocaleString()} km` : 'Custom'),
+      status: ctStatus
+    });
+  });
+
+  // Filter reminders by showInList (default true for built-ins, stored in maintData)
+  const builtInIds = { 'Oil Change':'oil','Air Filter':'airfilter','Mechanic':'mechanic',
+    'Car Parts':'carparts','Insurance':'insurance','NCT':'nct','Road Tax':'roadtax' };
+  const filteredReminders = reminders.filter(r => {
+    const tabKey = builtInIds[r.title];
+    if (tabKey) {
+      const d = maintData[tabKey] || {};
+      return d.showInList !== false; // default true
+    }
+    return true; // custom types handled separately
+  });
+
+  document.getElementById('maintenanceList').innerHTML = filteredReminders.map(r => {
+    const sl = statusLabel(r.status);
+    return `
+      <div class="maint-card ${r.status !== 'ok' ? r.status : ''}">
+        <div class="maint-icon-wrap ${r.iconCls}">${r.icon}</div>
+        <div class="maint-body">
+          <div class="maint-title">${escapeHtml(r.title)}</div>
+          <div class="maint-next">${escapeHtml(r.next)}</div>
+          <div class="maint-next" style="color:var(--text-dim);font-size:11px">${escapeHtml(r.sub)}</div>
+        </div>
+        <div class="maint-badge ${sl.cls}">${sl.txt}</div>
+      </div>`;
+  }).join('');
+
+  // Render maintenance tabs
+  renderMaintTabs();
+  // Restore fuel date default inside tab
+  const fuelDateEl = document.getElementById('carFuelDate');
+  if (fuelDateEl) { if (!fuelDateEl.value) fuelDateEl.value = toInputDate(new Date()); }
+}
+
+// ── MAINTENANCE TABS ────
+let customMaintTypes = safeParse('org_car_custom_maint', []);
+let maintData        = safeParse('org_car_maint_data',   {});
+
+const BUILT_IN_TABS = [
+  { id: 'fuel',      icon: '⛽', label: 'Fuel Fill-up' },
+  { id: 'oil',       icon: '🛢️', label: 'Oil Change'   },
+  { id: 'airfilter', icon: '💨', label: 'Air Filter'   },
+  { id: 'mechanic',  icon: '🔧', label: 'Mechanic'     },
+  { id: 'carparts',  icon: '⚙️', label: 'Car Parts'    },
+  { id: 'insurance', icon: '🛡️', label: 'Insurance'    },
+  { id: 'nct',       icon: '📋', label: 'NCT'          },
+  { id: 'roadtax',   icon: '💳', label: 'Road Tax'     },
+];
+
+let activeMaintTab = 'fuel';
+
+// ── CAR PLANNED EXPENSE (Insurance / NCT / Road Tax) ────
+// Routes to futureExpenses[] if date is in the future,
+// or directly to expenses[] (with maintTabId) if today/past.
+function addCarPlannedExpense(tabId, label, icon) {
+  const activePanel = document.getElementById('maintPanel_' + tabId);
+  if (!activePanel) return;
+
+  const costEl  = activePanel.querySelector('[id="maintCost_' + tabId + '"]');
+  const dateEl  = activePanel.querySelector('[id$="ExpDate"]');
+  const noteEl  = activePanel.querySelector('[id$="Note"]');
+  const amount  = costEl ? parseFloat(costEl.value) : NaN;
+  const date    = dateEl ? dateEl.value.trim() : '';
+  const note    = noteEl ? noteEl.value.trim() : '';
+
+  if (isNaN(amount) || amount <= 0 || !date) return;
+
+  const today      = new Date(); today.setHours(0, 0, 0, 0);
+  const chosenDate = new Date(date + 'T00:00:00');
+  const isFuture   = chosenDate > today;
+
+  if (isFuture) {
+    // Add to futureExpenses — appears in Planned / Future expenses section
+    futureExpenses.unshift({
+      id:         Date.now(),
+      name:       label,
+      amount:     amount,
+      cat:        'Car',
+      date:       date,
+      note:       note,
+      carTabId:   tabId,
+      recurrence: { type: 'onetime' }
+    });
+  } else {
+    // Add directly to expenses — appears in normal Expenses list and car history
+    expenses.unshift({
+      id:         Date.now(),
+      name:       'Car / ' + label,
+      amount:     amount,
+      cat:        'Car',
+      date:       date,
+      note:       note,
+      maintTabId: tabId
+    });
+  }
+
+  // Clear inputs
+  if (costEl) costEl.value = '';
+  if (dateEl) dateEl.value = '';
+  if (noteEl) noteEl.value = '';
+
+  save();
+  renderExpenses();
+  renderCar();
+
+  // Button feedback
+  const btn = activePanel.querySelector('.btn-maint-save');
+  if (btn) {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Added!';
+    setTimeout(() => { btn.textContent = orig; }, 1400);
+  }
+}
+
+function saveMaintData() {
+  localStorage.setItem('org_car_maint_data',   JSON.stringify(maintData));
+  localStorage.setItem('org_car_custom_maint', JSON.stringify(customMaintTypes));
+}
+
+function getAllMaintTabs() {
+  return [
+    ...BUILT_IN_TABS,
+    ...customMaintTypes.map(t => ({ id: 'custom_' + t.id, icon: '🔧', label: t.name, isCustom: true, customId: t.id }))
+  ];
+}
+
+function renderMaintTabs() {
+  const tabs   = getAllMaintTabs();
+  const bar    = document.getElementById('maintTabBar');
+  const panels = document.getElementById('maintTabPanels');
+  if (!bar || !panels) return;
+
+  bar.innerHTML = tabs.map(t => `
+    <button class="maint-tab-btn ${t.isCustom ? 'custom-tab' : ''} ${activeMaintTab === t.id ? 'active' : ''}"
+            onclick="switchMaintTab('${t.id}')">
+      ${t.icon} ${escapeHtml(t.label)}
+      ${t.isCustom ? `<span class="tab-del" onclick="event.stopPropagation();deleteCustomMaintType('${t.customId}')">×</span>` : ''}
+    </button>`).join('');
+
+  panels.innerHTML = tabs.map(t => `
+    <div class="maint-tab-panel ${activeMaintTab === t.id ? 'active' : ''}" id="maintPanel_${t.id}">
+      ${buildMaintPanelHTML(t)}
+    </div>`).join('');
+
+  tabs.forEach(t => {
+    const d = maintData[t.id] || {};
+    updateRecurSubRow(t.id, d.recurrence || 'onetime');
+  });
+}
+
+function buildMaintPanelHTML(tab) {
+  const d   = maintData[tab.id] || {};
+  const rec = d.recurrence || 'onetime';
+
+  const recurBlock = `
+    <div class="recur-row">
+      <div class="recur-label">Recurrence</div>
+      <div class="recur-options">
+        <button class="recur-btn ${rec==='onetime'?'active':''}" onclick="setRecur('${tab.id}','onetime')">One time</button>
+        <button class="recur-btn ${rec==='weekly'?'active':''}"  onclick="setRecur('${tab.id}','weekly')">Weekly</button>
+        <button class="recur-btn ${rec==='everyxmonths'?'active':''}" onclick="setRecur('${tab.id}','everyxmonths')">Every X months</button>
+      </div>
+      <div class="recur-sub-row" id="recurSub_${tab.id}_weekly">
+        <div class="car-input-label" style="margin-bottom:5px">Day of week</div>
+        <select onchange="saveRecurDetail('${tab.id}','weekday',this.value)">
+          ${['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'].map((dn,i) =>
+            `<option value="${i}" ${(d.weekday==i)?'selected':''}>${dn}</option>`).join('')}
+        </select>
+      </div>
+      <div class="recur-sub-row" id="recurSub_${tab.id}_everyxmonths">
+        <div class="car-input-label" style="margin-bottom:5px">Repeat every</div>
+        <select onchange="saveRecurDetail('${tab.id}','repeatMonths',this.value)">
+          <option value="1"  ${(d.repeatMonths==1 ||!d.repeatMonths)?'selected':''}>1 month</option>
+          <option value="2"  ${(d.repeatMonths==2)?'selected':''}>2 months</option>
+          <option value="3"  ${(d.repeatMonths==3)?'selected':''}>3 months</option>
+          <option value="6"  ${(d.repeatMonths==6)?'selected':''}>6 months</option>
+          <option value="12" ${(d.repeatMonths==12)?'selected':''}>12 months</option>
+        </select>
+      </div>
+    </div>`;
+
+  const noteField = `
+    <div class="car-input-group">
+      <div class="car-input-label">Note (optional)</div>
+      <input type="text" placeholder="Add a note…"
+             value="${escapeHtml(d.note||'')}"
+             onchange="saveMaintField('${tab.id}','note',this.value)">
+    </div>`;
+
+  if (tab.id === 'fuel') {
+    return `
+      <div class="car-form-title" style="margin-bottom:14px">
+        <div class="car-form-title-icon">⛽</div> New Fuel Entry
+      </div>
+      <div class="car-two-col">
+        <div class="car-input-group">
+          <div class="car-input-label">Odometer km</div>
+          <input type="number" id="carOdo" placeholder="e.g. 142350">
+        </div>
+        <div class="car-input-group">
+          <div class="car-input-label">Fuel Cost €</div>
+          <input type="number" id="carFuelCost" placeholder="e.g. 45.00">
+        </div>
+      </div>
+      <div class="car-two-col">
+        <div class="car-input-group">
+          <div class="car-input-label">Date</div>
+          <input type="date" id="carFuelDate">
+        </div>
+        <div class="car-input-group">
+          <div class="car-input-label">Note (optional)</div>
+          <input type="text" id="carFuelNote" placeholder="e.g. Shell station">
+        </div>
+      </div>
+      ${recurBlock}
+      <button class="btn-fuel-add" onclick="addCarFuel()">
+        <span>⛽</span> Add Fuel Entry
+      </button>
+      <div class="car-form-hint" style="margin-top:10px">Saved as <strong style="color:var(--sky)">Car / Fuel</strong> expense and linked to your odometer.</div>`;
+  }
+
+  if (tab.id === 'oil') {
+    return `
+      <div class="car-two-col">
+        <div class="car-input-group">
+          <div class="car-input-label">Last done km</div>
+          <input type="number" id="lastOilKm" placeholder="e.g. 120000"
+                 value="${d.lastKm||''}"
+                 onchange="saveMaintField('oil','lastKm',this.value)">
+        </div>
+        <div class="car-input-group">
+          <div class="car-input-label">Last done date</div>
+          <input type="date" value="${d.lastDate||''}" onchange="saveMaintField('oil','lastDate',this.value)">
+        </div>
+      </div>
+      <div class="car-input-group">
+        <div class="car-input-label">Interval (km)</div>
+        <input type="number" placeholder="e.g. 10000" value="${d.intervalKm||10000}"
+               onchange="saveMaintField('oil','intervalKm',this.value)">
+      </div>
+      <div class="car-input-group">
+        <div class="car-input-label">Cost € (optional)</div>
+        <input type="number" id="maintCost_oil" placeholder="e.g. 60.00" value="${d.cost||''}">
+      </div>
+      ${recurBlock}
+      ${noteField}
+      <button class="btn-maint-save" onclick="saveMaintTab('oil')">💾 Save Oil Change</button>`;
+  }
+
+  if (tab.id === 'airfilter') {
+    return `
+      <div class="car-two-col">
+        <div class="car-input-group">
+          <div class="car-input-label">Last done km</div>
+          <input type="number" id="lastAirFilterKm" placeholder="e.g. 120000"
+                 value="${d.lastKm||''}"
+                 onchange="saveMaintField('airfilter','lastKm',this.value)">
+        </div>
+        <div class="car-input-group">
+          <div class="car-input-label">Last done date</div>
+          <input type="date" value="${d.lastDate||''}" onchange="saveMaintField('airfilter','lastDate',this.value)">
+        </div>
+      </div>
+      <div class="car-input-group">
+        <div class="car-input-label">Interval (km)</div>
+        <input type="number" placeholder="e.g. 20000" value="${d.intervalKm||20000}"
+               onchange="saveMaintField('airfilter','intervalKm',this.value)">
+      </div>
+      <div class="car-input-group">
+        <div class="car-input-label">Cost € (optional)</div>
+        <input type="number" id="maintCost_airfilter" placeholder="e.g. 25.00" value="${d.cost||''}">
+      </div>
+      ${recurBlock}
+      ${noteField}
+      <button class="btn-maint-save" onclick="saveMaintTab('airfilter')">💾 Save Air Filter</button>`;
+  }
+
+  if (tab.id === 'insurance') {
+    return `
+      <div class="car-input-group">
+        <div class="car-input-label" style="margin-bottom:8px;color:var(--text-muted);font-size:11px;letter-spacing:0">Future date → Planned Expenses. Today or past → logged immediately as a car expense.</div>
+      </div>
+      <div class="car-two-col">
+        <div class="car-input-group">
+          <div class="car-input-label">Amount €</div>
+          <input type="number" id="maintCost_insurance" placeholder="e.g. 80.00" value="">
+        </div>
+        <div class="car-input-group">
+          <div class="car-input-label">Date</div>
+          <input type="date" id="insuranceExpDate" value="">
+        </div>
+      </div>
+      <div class="car-input-group">
+        <div class="car-input-label">Note (optional)</div>
+        <input type="text" id="insuranceNote" placeholder="e.g. Annual renewal">
+      </div>
+      <button class="btn-maint-save" onclick="addCarPlannedExpense('insurance','Insurance','🛡️')">➕ Add Insurance</button>`;
+  }
+
+  if (tab.id === 'nct') {
+    return `
+      <div class="car-input-group">
+        <div class="car-input-label" style="margin-bottom:8px;color:var(--text-muted);font-size:11px;letter-spacing:0">Future date → Planned Expenses. Today or past → logged immediately as a car expense.</div>
+      </div>
+      <div class="car-two-col">
+        <div class="car-input-group">
+          <div class="car-input-label">Amount €</div>
+          <input type="number" id="maintCost_nct" placeholder="e.g. 55.00" value="">
+        </div>
+        <div class="car-input-group">
+          <div class="car-input-label">Date</div>
+          <input type="date" id="nctExpDate" value="">
+        </div>
+      </div>
+      <div class="car-input-group">
+        <div class="car-input-label">Note (optional)</div>
+        <input type="text" id="nctNote" placeholder="e.g. NCT centre booked">
+      </div>
+      <button class="btn-maint-save" onclick="addCarPlannedExpense('nct','NCT','📋')">➕ Add NCT</button>`;
+  }
+
+  if (tab.id === 'roadtax') {
+    return `
+      <div class="car-input-group">
+        <div class="car-input-label" style="margin-bottom:8px;color:var(--text-muted);font-size:11px;letter-spacing:0">Future date → Planned Expenses. Today or past → logged immediately as a car expense.</div>
+      </div>
+      <div class="car-two-col">
+        <div class="car-input-group">
+          <div class="car-input-label">Amount €</div>
+          <input type="number" id="maintCost_roadtax" placeholder="e.g. 79.00" value="">
+        </div>
+        <div class="car-input-group">
+          <div class="car-input-label">Date</div>
+          <input type="date" id="roadtaxExpDate" value="">
+        </div>
+      </div>
+      <div class="car-input-group">
+        <div class="car-input-label">Note (optional)</div>
+        <input type="text" id="roadtaxNote" placeholder="e.g. Q1 payment">
+      </div>
+      <button class="btn-maint-save" onclick="addCarPlannedExpense('roadtax','Road Tax','💳')">➕ Add Road Tax</button>`;
+  }
+
+  if (tab.id === 'mechanic') {
+    return `
+      <div class="car-two-col">
+        <div class="car-input-group">
+          <div class="car-input-label">Date</div>
+          <input type="date" value="${d.lastDate||''}" onchange="saveMaintField('mechanic','lastDate',this.value)">
+        </div>
+        <div class="car-input-group">
+          <div class="car-input-label">Next visit date</div>
+          <input type="date" value="${d.nextDue||''}" onchange="saveMaintField('mechanic','nextDue',this.value)">
+        </div>
+      </div>
+      <div class="car-input-group">
+        <div class="car-input-label">Cost € (optional)</div>
+        <input type="number" id="maintCost_mechanic" placeholder="e.g. 150.00" value="${d.cost||''}">
+      </div>
+      ${recurBlock}
+      ${noteField}
+      <button class="btn-maint-save" onclick="saveMaintTab('mechanic')">💾 Save Mechanic</button>`;
+  }
+
+  if (tab.id === 'carparts') {
+    return `
+      <div class="car-two-col">
+        <div class="car-input-group">
+          <div class="car-input-label">Date purchased</div>
+          <input type="date" value="${d.lastDate||''}" onchange="saveMaintField('carparts','lastDate',this.value)">
+        </div>
+        <div class="car-input-group">
+          <div class="car-input-label">Part name / description</div>
+          <input type="text" placeholder="e.g. Brake pads" value="${escapeHtml(d.partName||'')}"
+                 onchange="saveMaintField('carparts','partName',this.value)">
+        </div>
+      </div>
+      <div class="car-input-group">
+        <div class="car-input-label">Cost € (optional)</div>
+        <input type="number" id="maintCost_carparts" placeholder="e.g. 80.00" value="${d.cost||''}">
+      </div>
+      ${recurBlock}
+      ${noteField}
+      <button class="btn-maint-save" onclick="saveMaintTab('carparts')">💾 Save Car Parts</button>`;
+  }
+
+  // Custom tab
+  return `
+    <div class="car-two-col">
+      <div class="car-input-group">
+        <div class="car-input-label">Last done date</div>
+        <input type="date" value="${d.lastDate||''}" onchange="saveMaintField('${tab.id}','lastDate',this.value)">
+      </div>
+      <div class="car-input-group">
+        <div class="car-input-label">Next due date</div>
+        <input type="date" value="${d.nextDue||''}" onchange="saveMaintField('${tab.id}','nextDue',this.value)">
+      </div>
+    </div>
+    <div class="car-input-group">
+      <div class="car-input-label">Last done km (optional)</div>
+      <input type="number" placeholder="e.g. 120000" value="${d.lastKm||''}"
+             onchange="saveMaintField('${tab.id}','lastKm',this.value)">
+    </div>
+    <div class="car-input-group">
+      <div class="car-input-label">Interval km (optional)</div>
+      <input type="number" placeholder="e.g. 10000" value="${d.intervalKm||''}"
+             onchange="saveMaintField('${tab.id}','intervalKm',this.value)">
+    </div>
+    <div class="car-input-group">
+      <div class="car-input-label">Cost € (optional)</div>
+      <input type="number" id="maintCost_${tab.id}" placeholder="e.g. 0.00" value="${d.cost||''}">
+    </div>
+    ${recurBlock}
+    ${noteField}
+    <button class="btn-maint-save" onclick="saveMaintTab('${tab.id}')">💾 Save ${escapeHtml(tab.label)}</button>`;
+}
+
+function switchMaintTab(id) {
+  activeMaintTab = id;
+  renderMaintTabs();
+  const fuelDateEl = document.getElementById('carFuelDate');
+  if (fuelDateEl && !fuelDateEl.value) fuelDateEl.value = toInputDate(new Date());
+}
+
+function setRecur(tabId, type) {
+  if (!maintData[tabId]) maintData[tabId] = {};
+  maintData[tabId].recurrence = type;
+  saveMaintData();
+  const panel = document.getElementById('maintPanel_' + tabId);
+  if (!panel) return;
+  panel.querySelectorAll('.recur-btn').forEach(btn => {
+    const btnType = btn.textContent.trim().toLowerCase().replace(/\s+/g,'');
+    btn.classList.toggle('active', btnType === type || (type==='onetime' && btnType==='onetime'));
+  });
+  updateRecurSubRow(tabId, type);
+}
+
+function updateRecurSubRow(tabId, type) {
+  const weeklyRow     = document.getElementById('recurSub_' + tabId + '_weekly');
+  const everyXRow     = document.getElementById('recurSub_' + tabId + '_everyxmonths');
+  if (weeklyRow) weeklyRow.classList.toggle('visible', type === 'weekly');
+  if (everyXRow) everyXRow.classList.toggle('visible', type === 'everyxmonths');
+}
+
+function saveRecurDetail(tabId, field, value) {
+  if (!maintData[tabId]) maintData[tabId] = {};
+  maintData[tabId][field] = value;
+  saveMaintData();
+}
+
+function parseBritishDate(str) {
+  if (!str) return '';
+  str = str.trim();
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) {
+    const [dd, mm, yyyy] = str.split('/');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+  return str;
+}
+
+function saveMaintField(tabId, field, value) {
+  if (!maintData[tabId]) maintData[tabId] = {};
+  const dateFields = ['lastDate','nextDue','dueDate'];
+  if (dateFields.includes(field)) value = parseBritishDate(value);
+  maintData[tabId][field] = value;
+  saveMaintData();
+  if (tabId === 'oil'       && field === 'lastKm')   maintenanceSettings.lastOilKm         = parseFloat(value) || 0;
+  if (tabId === 'airfilter' && field === 'lastKm')   maintenanceSettings.lastAirFilterKm   = parseFloat(value) || 0;
+  if (tabId === 'nct'       && field === 'dueDate')  maintenanceSettings.lastNctMonth      = value;
+  if (tabId === 'insurance' && field === 'dueDate')  maintenanceSettings.insuranceBaseDate = value;
+  if (tabId === 'insurance' && field === 'amount')   maintenanceSettings.insuranceAmount   = parseFloat(value) || 80;
+  if (tabId === 'roadtax'   && field === 'dueDate')  maintenanceSettings.taxBaseDate       = value;
+  if (tabId === 'roadtax'   && field === 'amount')   maintenanceSettings.taxAmount         = parseFloat(value) || 79;
+  save();
+}
+
+function saveMaintTab(tabId) {
+  if (!maintData[tabId]) maintData[tabId] = {};
+  // Sync maintenanceSettings from maintData (kept up-to-date via saveMaintField onchange)
+  if (maintData.oil       && maintData.oil.lastKm)       maintenanceSettings.lastOilKm       = parseFloat(maintData.oil.lastKm) || 0;
+  if (maintData.airfilter && maintData.airfilter.lastKm) maintenanceSettings.lastAirFilterKm = parseFloat(maintData.airfilter.lastKm) || 0;
+
+  // ── showInList: read checkbox for built-in tabs ──
+  const showInListEl = document.getElementById('showInList_' + tabId);
+  if (showInListEl) {
+    maintData[tabId].showInList = showInListEl.checked;
+  }
+
+  // ── Cost field: read from active panel input ──
+  // Insurance, NCT and Road Tax now use addCarPlannedExpense() — skip here
+  const activePanel = document.getElementById('maintPanel_' + tabId);
+  const costEl = activePanel ? activePanel.querySelector('[id="maintCost_' + tabId + '"]') : null;
+  const costVal = (tabId === 'insurance' || tabId === 'nct' || tabId === 'roadtax') ? NaN : (costEl ? parseFloat(costEl.value) : NaN);
+
+  // ── Expense date: read from active panel date input ──
+  let expDate = toInputDate(new Date());
+  if (activePanel) {
+    const expDateEl = activePanel.querySelector('[id$="ExpDate"], [id$="expDate"]');
+    if (expDateEl && expDateEl.value) expDate = parseBritishDate(expDateEl.value);
+  }
+
+  if (!isNaN(costVal) && costVal > 0) {
+    // Store cost in maintData for display
+    maintData[tabId].cost = costVal;
+
+    // Determine label for expense category
+    const allTabs = getAllMaintTabs();
+    const tabDef  = allTabs.find(t => t.id === tabId);
+    const tabLabel = tabDef ? tabDef.label : tabId;
+    const expCat   = 'Car';
+    // For car parts, append the part name if provided
+    let expName = 'Car / ' + tabLabel;
+    if (tabId === 'carparts') {
+      const partNameEl = document.querySelector('#maintPanel_carparts input[placeholder="e.g. Brake pads"]');
+      const partNameVal = (partNameEl ? partNameEl.value.trim() : '') || (maintData['carparts'] || {}).partName || '';
+      if (partNameVal) expName = 'Car / ' + partNameVal;
+    }
+
+    // Add to expenses
+    expenses.unshift({
+      id: Date.now(),
+      name: expName,
+      amount: costVal,
+      cat: expCat,
+      date: expDate,
+      maintTabId: tabId   // link back so we can identify it
+    });
+
+    // Clear the cost input after saving
+    if (costEl) costEl.value = '';
+  }
+
+  saveMaintData();
+  save();
+  renderCar();
+  renderExpenses();
+  // Re-find the button AFTER renderCar has rebuilt the panels
+  const panelAfter = document.getElementById('maintPanel_' + tabId);
+  if (panelAfter) {
+    const btnAfter = panelAfter.querySelector('.btn-maint-save');
+    if (btnAfter) {
+      const orig = btnAfter.textContent;
+      btnAfter.textContent = '✓ Saved!';
+      setTimeout(() => { const b = document.querySelector('#maintPanel_' + tabId + ' .btn-maint-save'); if(b) b.textContent = orig; }, 1400);
+    }
+  }
+}
+
+function toggleCustomMaintFields() {
+  const nameEl  = document.getElementById('customMaintName');
+  const extraEl = document.getElementById('customMaintExtraFields');
+  if (!nameEl || !extraEl) return;
+  extraEl.style.display = nameEl.value.trim().length > 0 ? 'block' : 'none';
+}
+
+function addCustomMaintType() {
+  const input        = document.getElementById('customMaintName');
+  const lastKmEl     = document.getElementById('customMaintLastKm');
+  const intervalEl   = document.getElementById('customMaintIntervalKm');
+  const showListEl   = document.getElementById('customMaintShowInList');
+  const name         = (input.value || '').trim();
+  if (!name) return;
+  const id           = Date.now();
+  const lastKm       = lastKmEl   ? parseFloat(lastKmEl.value)   || 0 : 0;
+  const intervalKm   = intervalEl ? parseFloat(intervalEl.value) || 0 : 0;
+  const showInList   = showListEl ? showListEl.checked : false;
+  customMaintTypes.push({ id, name, lastKm, intervalKm, showInList });
+  // Pre-populate maintData with km info
+  if (lastKm || intervalKm) {
+    if (!maintData['custom_' + id]) maintData['custom_' + id] = {};
+    if (lastKm)     maintData['custom_' + id].lastKm     = lastKm;
+    if (intervalKm) maintData['custom_' + id].intervalKm = intervalKm;
+  }
+  input.value = '';
+  if (lastKmEl)   lastKmEl.value   = '';
+  if (intervalEl) intervalEl.value = '';
+  if (showListEl) showListEl.checked = false;
+  const extraEl = document.getElementById('customMaintExtraFields');
+  if (extraEl) extraEl.style.display = 'none';
+  saveMaintData();
+  activeMaintTab = 'custom_' + id;
+  renderMaintTabs();
+}
+
+function deleteCustomMaintType(customId) {
+  customMaintTypes = customMaintTypes.filter(t => String(t.id) !== String(customId));
+  delete maintData['custom_' + customId];
+  if (activeMaintTab === 'custom_' + customId) activeMaintTab = 'fuel';
+  saveMaintData();
+  renderMaintTabs();
+}
+
+// ── BACKUP & RESTORE ────
+const APP_KEYS = [
+  'org_tasks','org_notes','org_events','org_expenses',
+  'org_future_expenses','org_car_fuel','org_car_maintenance_settings',
+  'org_car_custom_maint','org_car_maint_data','org_initial_odo'
+];
+const BACKUP_LAST_EXPORT_KEY  = 'org_backup_last_export';
+const BACKUP_LAST_DISMISS_KEY = 'org_backup_last_dismiss';
+const BACKUP_REMINDER_DAYS    = 7; // show reminder if no backup in X days
+
+// Pending validated import data (held until user confirms)
+let _pendingImport = null;
+
+function britishDateFromTs(ts) {
+  if (!ts) return 'Never';
+  const d = new Date(ts);
+  const dd = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const yyyy = d.getFullYear();
+  const hh = String(d.getHours()).padStart(2,'0');
+  const min = String(d.getMinutes()).padStart(2,'0');
+  return `${dd}/${mm}/${yyyy} at ${hh}:${min}`;
+}
+
+function renderBackupTab() {
+  // Update last backup label
+  const lastTs = localStorage.getItem(BACKUP_LAST_EXPORT_KEY);
+  const el = document.getElementById('lastBackupLabel');
+  if (el) el.textContent = lastTs ? britishDateFromTs(Number(lastTs)) : 'Never';
+  // Clear any lingering status
+  showBackupStatus('', '');
+}
+
+function exportBackup() {
+  try {
+    const payload = { _meta: { exportedAt: new Date().toISOString(), app: 'Organise.me', version: '12' }, data: {} };
+    APP_KEYS.forEach(k => {
+      const raw = localStorage.getItem(k);
+      if (raw !== null) {
+        try { payload.data[k] = JSON.parse(raw); }
+        catch(e) { payload.data[k] = raw; } // store raw if parse fails
+      }
+    });
+
+    // Warn if all data arrays are empty
+    const hasData = ['org_tasks','org_notes','org_events','org_expenses','org_future_expenses','org_car_fuel']
+      .some(k => Array.isArray(payload.data[k]) && payload.data[k].length > 0);
+    if (!hasData) {
+      showBackupStatus('⚠ Nothing to export — no data saved yet.', 'error');
+      return;
+    }
+
+    const json = JSON.stringify(payload, null, 2);
+    const now  = new Date();
+    const stamp = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+    const filename = `organiseme_backup_${stamp}.json`;
+
+    const blob = new Blob([json], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = filename; a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+
+    // Record timestamp
+    const ts = Date.now();
+    localStorage.setItem(BACKUP_LAST_EXPORT_KEY, String(ts));
+    // Hide reminder
+    hideBackupReminder();
+    // Update label
+    const lbl = document.getElementById('lastBackupLabel');
+    if (lbl) lbl.textContent = britishDateFromTs(ts);
+    showBackupStatus('✓ Backup exported successfully — ' + filename, 'success');
+  } catch(e) {
+    showBackupStatus('Export failed: ' + (e.message || 'Unknown error'), 'error');
+  }
+}
+
+function triggerExportFromReminder() {
+  // Switch to backup tab and trigger export
+  switchTab('backup');
+  setTimeout(() => exportBackup(), 150);
+}
+
+function handleImportFile(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  if (!file.name.endsWith('.json') && file.type !== 'application/json') {
+    showBackupStatus('Invalid file type. Please select a .json backup file.', 'error');
+    input.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    input.value = ''; // reset so same file can be re-selected
+    processImportData(e.target.result);
+  };
+  reader.onerror = function() {
+    showBackupStatus('Could not read file. Please try again.', 'error');
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function processImportData(raw) {
+  // Step 1: Parse JSON
+  let parsed;
+  try { parsed = JSON.parse(raw); }
+  catch(e) {
+    showBackupStatus('Invalid backup file — could not parse JSON.', 'error');
+    return;
+  }
+
+  // Step 2: Basic structure check
+  if (!parsed || typeof parsed !== 'object') {
+    showBackupStatus('Invalid backup file — unexpected format.', 'error');
+    return;
+  }
+
+  // Step 3: Check it looks like an Organise.me backup
+  const hasData = parsed.data && typeof parsed.data === 'object';
+  const hasMeta = parsed._meta && typeof parsed._meta === 'object';
+  // Also accept legacy flat backups (direct key-value at root)
+  const looksLegacy = !hasData && APP_KEYS.some(k => k in parsed);
+
+  if (!hasData && !looksLegacy) {
+    showBackupStatus('This file doesn\'t look like an Organise.me backup.', 'error');
+    return;
+  }
+
+  // Step 4: Extract data section (handle both formats)
+  const dataSection = hasData ? parsed.data : parsed;
+
+  // Step 5: Validate array fields are actually arrays (or absent)
+  const arrayKeys = ['org_tasks','org_notes','org_events','org_expenses','org_future_expenses','org_car_fuel','org_car_custom_maint'];
+  for (const k of arrayKeys) {
+    if (k in dataSection && !Array.isArray(dataSection[k])) {
+      showBackupStatus(`Invalid backup — field "${k}" is not an array.`, 'error');
+      return;
+    }
+  }
+
+  // Step 6: Validate object fields
+  const objKeys = ['org_car_maintenance_settings','org_car_maint_data'];
+  for (const k of objKeys) {
+    if (k in dataSection && (typeof dataSection[k] !== 'object' || Array.isArray(dataSection[k]) || dataSection[k] === null)) {
+      showBackupStatus(`Invalid backup — field "${k}" has unexpected type.`, 'error');
+      return;
+    }
+  }
+
+  // Validation passed — hold in memory for confirm step
+  _pendingImport = { dataSection, meta: hasMeta ? parsed._meta : null };
+
+  // Build summary for modal
+  const t = (dataSection.org_tasks         || []).length;
+  const n = (dataSection.org_notes         || []).length;
+  const ev= (dataSection.org_events        || []).length;
+  const ex= (dataSection.org_expenses      || []).length;
+  const fe= (dataSection.org_future_expenses||[]).length;
+  const cf= (dataSection.org_car_fuel      || []).length;
+  const exportedAt = hasMeta && parsed._meta.exportedAt
+    ? britishDateFromTs(new Date(parsed._meta.exportedAt).getTime())
+    : 'Unknown';
+
+  const summary = document.getElementById('importModalSummary');
+  if (summary) {
+    summary.innerHTML =
+      `<strong>Exported:</strong> ${escapeHtml(exportedAt)}<br>` +
+      `<strong>Tasks:</strong> ${t} &nbsp;·&nbsp; <strong>Notes:</strong> ${n} &nbsp;·&nbsp; <strong>Events:</strong> ${ev}<br>` +
+      `<strong>Expenses:</strong> ${ex} &nbsp;·&nbsp; <strong>Planned:</strong> ${fe}<br>` +
+      `<strong>Fuel entries:</strong> ${cf}`;
+  }
+
+  document.getElementById('importModal').classList.add('open');
+}
+
+function closeImportModal() {
+  _pendingImport = null;
+  document.getElementById('importModal').classList.remove('open');
+}
+
+function confirmImport() {
+  if (!_pendingImport) { closeImportModal(); return; }
+  const dataSection = _pendingImport.dataSection;
+
+  try {
+    // Write all present keys to localStorage
+    APP_KEYS.forEach(k => {
+      if (k in dataSection) {
+        localStorage.setItem(k, JSON.stringify(dataSection[k]));
+      }
+      // If key not in backup, leave existing data (graceful partial restore)
+    });
+
+    // Reload all in-memory variables
+    tasks               = safeParse('org_tasks',                    []);
+    notes               = safeParse('org_notes',                    []);
+    events              = safeParse('org_events',                   []);
+    expenses            = safeParse('org_expenses',                 []);
+    futureExpenses      = safeParse('org_future_expenses',          []);
+    carFuel             = safeParse('org_car_fuel',                 []);
+    maintenanceSettings = safeParse('org_car_maintenance_settings', {});
+    initialOdoData      = safeParse('org_initial_odo',              null);
+    customMaintTypes    = safeParse('org_car_custom_maint',         []);
+    maintData           = safeParse('org_car_maint_data',           {});
+    activeMaintTab      = 'fuel';
+
+    closeImportModal();
+    _pendingImport = null;
+
+    // Re-render everything
+    renderDashboard();
+    renderTasks();
+    renderNotes();
+    renderCalendar();
+    renderExpenses();
+    renderCar();
+    updateHeaderStats();
+    renderBackupTab();
+
+    showBackupStatus('✓ Backup restored successfully.', 'success');
+    // Switch to dashboard
+    switchTab('backup');
+  } catch(e) {
+    closeImportModal();
+    _pendingImport = null;
+    showBackupStatus('Restore failed: ' + (e.message || 'Unknown error'), 'error');
+  }
+}
+
+function showBackupStatus(msg, type) {
+  const el = document.getElementById('backupStatus');
+  if (!el) return;
+  el.className = 'backup-status';
+  if (!msg) { el.style.display = 'none'; el.textContent = ''; return; }
+  el.classList.add(type);
+  el.textContent = msg;
+  if (type === 'success') {
+    setTimeout(() => { el.style.display = 'none'; el.textContent = ''; el.className = 'backup-status'; }, 5000);
+  }
+}
+
+// ── BACKUP REMINDER ────
+function checkBackupReminder() {
+  const now         = Date.now();
+  const lastExport  = Number(localStorage.getItem(BACKUP_LAST_EXPORT_KEY)  || 0);
+  const lastDismiss = Number(localStorage.getItem(BACKUP_LAST_DISMISS_KEY) || 0);
+  const days7       = BACKUP_REMINDER_DAYS * 24 * 60 * 60 * 1000;
+  const day1        = 24 * 60 * 60 * 1000;
+
+  // Never been dismissed AND never exported → show
+  // OR last export > 7 days ago AND last dismiss > 1 day ago → show
+  const neverExported  = lastExport === 0;
+  const exportedOld    = lastExport > 0 && (now - lastExport) > days7;
+  const dismissedRecently = lastDismiss > 0 && (now - lastDismiss) < day1;
+
+  const shouldShow = (neverExported || exportedOld) && !dismissedRecently;
+
+  const banner = document.getElementById('backupReminder');
+  if (!banner) return;
+  if (shouldShow) {
+    const sub = document.getElementById('backupReminderSub');
+    if (sub) {
+      if (neverExported) {
+        sub.textContent = "You haven't backed up yet. Export a copy to keep your data safe.";
+      } else {
+        const d = new Date(lastExport);
+        const dd = String(d.getDate()).padStart(2,'0');
+        const mm = String(d.getMonth()+1).padStart(2,'0');
+        const yyyy = d.getFullYear();
+        sub.textContent = `Last backup: ${dd}/${mm}/${yyyy}. Consider exporting a fresh copy.`;
+      }
+    }
+    banner.classList.add('visible');
+  } else {
+    banner.classList.remove('visible');
+  }
+}
+
+function dismissBackupReminder() {
+  localStorage.setItem(BACKUP_LAST_DISMISS_KEY, String(Date.now()));
+  const banner = document.getElementById('backupReminder');
+  if (banner) banner.classList.remove('visible');
+}
+
+function hideBackupReminder() {
+  const banner = document.getElementById('backupReminder');
+  if (banner) banner.classList.remove('visible');
+}
+
+// ── RESET ────
+function openResetModal()  { document.getElementById('resetModal').classList.add('open'); }
+function closeResetModal() { document.getElementById('resetModal').classList.remove('open'); }
+
+function confirmResetAll() {
+  ['org_tasks','org_notes','org_events','org_expenses','org_future_expenses','org_car_fuel','org_car_maintenance_settings','org_car_custom_maint','org_car_maint_data','org_initial_odo']
+    .forEach(k => localStorage.removeItem(k));
+  tasks = []; notes = []; events = []; expenses = []; futureExpenses = []; carFuel = []; maintenanceSettings = {};
+  customMaintTypes = []; maintData = {}; activeMaintTab = 'fuel'; initialOdoData = null;
+  closeResetModal();
+  renderDashboard(); renderTasks(); renderNotes(); renderCalendar(); renderExpenses(); renderCar(); updateHeaderStats();
+}
+
+// ── INIT ────
+(function init() {
+  // Header date in British format
+  const dd   = String(now.getDate()).padStart(2,'0');
+  const mm   = String(now.getMonth()+1).padStart(2,'0');
+  const yyyy = now.getFullYear();
+  document.getElementById('headerDate').textContent = `${days[now.getDay()].toUpperCase()} · ${dd}/${mm}/${yyyy}`;
+
+  document.getElementById('expDate').value       = toInputDate(new Date());
+  document.getElementById('futureExpDate').value = toInputDate(new Date());
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => switchTab(item.dataset.tab));
+  });
+
+  document.getElementById('eventModal').addEventListener('click', function(e) {
+    if (e.target === this) closeEventModal();
+  });
+
+  document.getElementById('importModal').addEventListener('click', function(e) {
+    if (e.target === this) closeImportModal();
+  });
+
+  renderDashboard();
+  renderTasks();
+  renderNotes();
+  renderCalendar();
+  renderExpenses();
+  renderCar();
+  updateHeaderStats();
+  checkBackupReminder();
+})();
+</script>
+</body>
+</html>
